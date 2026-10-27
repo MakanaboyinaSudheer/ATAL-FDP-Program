@@ -101,10 +101,7 @@
                 </ul>
 
                 <div class="flex items-center gap-2">
-                    <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
-                       class="hidden sm:inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-md shadow-brand-600/25 transition">
-                        Register Free <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                    </a>
+                    
                     <button id="menu-btn" class="lg:hidden w-10 h-10 grid place-items-center rounded-xl text-slate-700 hover:bg-slate-100 transition"
                             aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
                         <i class="fa-solid fa-bars text-lg"></i>
@@ -481,7 +478,7 @@
                     <div class="lg:col-span-3 reveal">
                         <form id="enquiry-form" novalidate class="bg-white rounded-2xl ring-1 ring-slate-200 p-6 sm:p-8 shadow-sm h-full">
                             <h3 class="font-bold text-slate-900 text-lg">Send an enquiry</h3>
-                            <p class="text-sm text-slate-500 mt-1">Your email app will open with the message ready to send to the coordinator.</p>
+                            <p class="text-sm text-slate-500 mt-1">Your enquiry goes straight to the programme coordinator, who will reply to the email address you provide.</p>
 
                             <div class="mt-6 grid sm:grid-cols-2 gap-4">
                                 <div>
@@ -524,10 +521,12 @@
                             </div>
 
                             <div class="mt-6 flex flex-col sm:flex-row sm:items-center gap-3">
-                                <button type="submit" class="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-xl shadow-md shadow-brand-600/25 transition">
+                                <!-- Honeypot: hidden from people, filled in by spam bots -->
+                                <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
+                                <button type="submit" id="enquiry-submit" class="inline-flex disabled:opacity-60 disabled:cursor-wait items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-xl shadow-md shadow-brand-600/25 transition">
                                     <i class="fa-regular fa-paper-plane"></i> Send Enquiry
                                 </button>
-                                <p class="text-xs text-slate-400">Drafts are saved on this device until you send them.</p>
+                                <p class="text-xs text-slate-400">Drafts are saved on this device until your enquiry is sent.</p>
                             </div>
                         </form>
                     </div>
@@ -669,7 +668,6 @@
         };
 
         const FAQS = [
-            { q: 'Is there any registration fee?', a: 'No. The programme is 100% free: there is no charge for registration, course materials or certification.' },
             { q: 'Where do I register?', a: `Registration is accepted only through the official AICTE ATAL Academy portal at <a class="text-brand-700 font-semibold underline underline-offset-2" href="${PORTAL_URL}" target="_blank" rel="noopener noreferrer">atalacademy.aicte-india.org</a>. This website only provides information.` },
             { q: 'Who can attend?', a: 'The programme is designed for faculty members, research scholars and industry professionals interested in AI, data science, materials engineering and autonomous systems.' },
             { q: 'What are the dates and timings?', a: 'The FDP runs from 14 to 19 December 2026. Days 1–5 run from 6:00 PM to 9:30 PM IST. Day 6 (19 December) runs from 2:00 PM to 7:30 PM IST and includes the online test, feedback and the valedictory session.' },
@@ -1138,30 +1136,53 @@
             return !err;
         }
 
-        form.addEventListener('submit', e => {
+        // Delivered by FormSubmit (https://formsubmit.co), a free form-to-email relay for static sites.
+        // The first submission sends a one-time activation email to the coordinator's inbox.
+        const ENQUIRY_ENDPOINT = 'https://formsubmit.co/ajax/bhagath@lbrce.ac.in';
+        const submitBtn = $('#enquiry-submit');
+        const submitLabel = submitBtn.innerHTML;
+
+        form.addEventListener('submit', async e => {
             e.preventDefault();
             const inputs = ['name', 'email', 'institution', 'message'].map(n => form.elements[n]);
             const results = inputs.map(validateField);
             const firstBad = inputs[results.indexOf(false)];
             if (firstBad) { firstBad.focus(); toast('Please fix the highlighted fields', 'fa-circle-exclamation text-amber-400'); return; }
+            if (form.elements._honey.value) return;
 
             const d = Object.fromEntries(fields.map(f => [f, form.elements[f].value.trim()]));
-            const subject = `ATAL FDP Enquiry: ${d.name} (${d.institution})`;
-            const body = [
-                'Dear Dr. P. Bhagath,', '',
-                d.message, '',
-                '---',
-                `Name: ${d.name}`,
-                `Email: ${d.email}`,
-                `Institution: ${d.institution}`,
-                `Role: ${d.role}`,
-                `Programme: ATAL FDP: ${FDP_TITLE} (14–19 Dec 2026)`,
-            ].join('\n');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
+            try {
+                const res = await fetch(ENQUIRY_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify({
+                        _subject: `ATAL FDP Enquiry: ${d.name} (${d.institution})`,
+                        _replyto: d.email,
+                        _template: 'table',
+                        _captcha: 'false',
+                        Name: d.name,
+                        Email: d.email,
+                        Institution: d.institution,
+                        Role: d.role,
+                        Question: d.message,
+                        Programme: `ATAL FDP: ${FDP_TITLE} (14–19 Dec 2026)`,
+                    }),
+                });
+                const out = await res.json().catch(() => ({}));
+                if (!res.ok || String(out.success) !== 'true') throw new Error(out.message || `HTTP ${res.status}`);
 
-            window.location.href = `mailto:bhagath@lbrce.ac.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
-            form.reset(); msgCount();
-            toast('Opening your email app with the enquiry…', 'fa-paper-plane text-brand-300');
+                try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+                form.reset(); msgCount();
+                toast('Enquiry sent! The coordinator will reply to your email.');
+            } catch (err) {
+                console.error('Enquiry failed:', err);
+                toast('Could not send right now. Please try again or email bhagath@lbrce.ac.in', 'fa-circle-exclamation text-amber-400');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = submitLabel;
+            }
         });
 
         /* ==========================================================
