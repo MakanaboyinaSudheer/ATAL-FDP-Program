@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICTE ATAL FDP 2026 | AI-Driven Materials Intelligence & Autonomous Systems | LBRCE</title>
+    <meta name="description" content="AICTE ATAL Online 6-Day Faculty Development Programme on AI-Driven Materials Intelligence and Autonomous Systems, 14–19 December 2026, organised by the Department of AI&DS, LBRCE Mylavaram. Free registration.">
+    <meta name="theme-color" content="#4338ca">
+    <meta property="og:title" content="AICTE ATAL FDP: AI-Driven Materials Intelligence & Autonomous Systems">
+    <meta property="og:description" content="Free 6-day online FDP, 14–19 Dec 2026 · Dept. of AI&DS, LBRCE · Speakers from IIT Guwahati, IIT Ropar, DRDO and industry.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="assets/aicte-logo.png">
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    },
+                    keyframes: {
+                        fadeUp: { '0%': { opacity: 0, transform: 'translateY(16px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                    },
+                    animation: {
+                        fadeUp: 'fadeUp .6s ease-out both',
+                        float: 'float 6s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        section[id] { scroll-margin-top: 80px; }
+        .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+        .reveal.is-visible { opacity: 1; transform: none; }
+        .grid-bg {
+            background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+        .faq-item.open .faq-body { grid-template-rows: 1fr; }
+        .faq-item.open .faq-icon { transform: rotate(45deg); }
+        .nav-link.active { color: #4338ca; background: #eef2ff; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] bg-brand-600 text-white px-4 py-2 rounded-lg">Skip to content</a>
+
+    <!-- ================= HEADER & STICKY NAVIGATION ================= -->
+    <header id="site-header" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center justify-between h-16" aria-label="Primary">
+                <a href="#home" class="flex items-center gap-2.5 group">
+                    <img src="assets/aicte-logo.png" alt="AICTE logo" width="40" height="40" class="w-10 h-10 rounded-full bg-white p-0.5 shadow-md">
+                    <span class="leading-tight">
+                        <span class="block font-extrabold text-slate-900 text-sm tracking-tight">ATAL FDP 2026</span>
+                        <span class="block text-[11px] font-medium text-slate-500">AI&amp;DS · LBRCE</span>
+                    </span>
+                </a>
+
+                <ul class="hidden lg:flex items-center gap-1 text-sm font-semibold text-slate-600">
+                    <li><a href="#about" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">About</a></li>
+                    <li><a href="#topics" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">Topics</a></li>
+                    <li><a href="#speakers" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">Speakers</a></li>
+                    <li><a href="#schedule" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">Schedule</a></li>
+                    <li><a href="#register" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">Register</a></li>
+                    <li><a href="#faq" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">FAQ</a></li>
+                    <li><a href="#contact" class="nav-link px-3 py-2 rounded-lg hover:text-brand-700 transition">Contact</a></li>
+                </ul>
+
+                <div class="flex items-center gap-2">
+                    <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
+                       class="hidden sm:inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-md shadow-brand-600/25 transition">
+                        Register Free <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </a>
+                    <button id="menu-btn" class="lg:hidden w-10 h-10 grid place-items-center rounded-xl text-slate-700 hover:bg-slate-100 transition"
+                            aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile drawer -->
+    <div id="drawer-overlay" class="fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="mobile-drawer" class="fixed top-0 right-0 bottom-0 z-[70] w-80 max-w-[85%] bg-white shadow-2xl translate-x-full transition-transform duration-300 flex flex-col"
+           aria-label="Mobile navigation" aria-hidden="true">
+        <div class="flex items-center justify-between px-5 h-16 border-b border-slate-100">
+            <span class="font-extrabold text-slate-900">Menu</span>
+            <button id="menu-close" class="w-10 h-10 grid place-items-center rounded-xl hover:bg-slate-100" aria-label="Close menu">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        <ul class="flex-1 overflow-y-auto p-4 space-y-1 font-semibold text-slate-700">
+            <li><a href="#about" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-solid fa-circle-info w-5 text-brand-600"></i>About</a></li>
+            <li><a href="#topics" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-solid fa-layer-group w-5 text-brand-600"></i>Key Topics</a></li>
+            <li><a href="#speakers" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-solid fa-user-tie w-5 text-brand-600"></i>Speakers</a></li>
+            <li><a href="#schedule" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-regular fa-calendar w-5 text-brand-600"></i>Schedule</a></li>
+            <li><a href="#register" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-solid fa-pen-to-square w-5 text-brand-600"></i>How to Register</a></li>
+            <li><a href="#faq" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-regular fa-circle-question w-5 text-brand-600"></i>FAQ</a></li>
+            <li><a href="#contact" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-regular fa-envelope w-5 text-brand-600"></i>Contact</a></li>
+        </ul>
+        <div class="p-4 border-t border-slate-100">
+            <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-2 w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition">
+                Register on ATAL Portal <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+        </div>
+    </aside>
+
+    <main id="main">
+
+        <!-- ================= HERO ================= -->
+        <section id="home" class="relative overflow-hidden bg-gradient-to-br from-slate-950 via-brand-900 to-brand-700 text-white pt-28 pb-20 lg:pt-36 lg:pb-28">
+            <div class="absolute inset-0 grid-bg [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_75%)]"></div>
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-500/30 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-32 -left-24 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"></div>
+
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 animate-fadeUp">
+                    <div class="flex items-center gap-3 mb-5">
+                        <img src="assets/aicte-logo.png" alt="AICTE logo" width="56" height="56" class="w-14 h-14 rounded-full bg-white p-1 shadow-lg">
+                        <div class="leading-tight">
+                            <p class="font-bold">All India Council for Technical Education</p>
+                            <p class="text-xs text-brand-200 font-medium">AICTE Training and Learning (ATAL) Academy</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="inline-flex items-center gap-2 bg-white/10 ring-1 ring-white/20 backdrop-blur px-3 py-1.5 rounded-full text-xs font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> AICTE ATAL Academy · Online FDP
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-emerald-400/15 text-emerald-300 ring-1 ring-emerald-300/30 px-3 py-1.5 rounded-full text-xs font-bold">
+                            <i class="fa-solid fa-gift"></i> 100% Free
+                        </span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05]">
+                        AI-Driven <span class="bg-gradient-to-r from-cyan-300 to-brand-200 bg-clip-text text-transparent">Materials Intelligence</span> &amp; Autonomous Systems
+                    </h1>
+                    <p class="mt-6 text-lg text-brand-100/90 max-w-2xl leading-relaxed">
+                        A 6-day online Faculty Development Programme on Explainable AI, materials informatics with Graph Neural Networks,
+                        and AI-enabled autonomous drone systems. Organised by the Department of AI&amp;DS, Lakireddy Bali Reddy College of Engineering.
+                    </p>
+
+                    <dl class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl">
+                        <div class="bg-white/10 ring-1 ring-white/15 rounded-2xl p-4 backdrop-blur">
+                            <dt class="text-xs font-semibold text-brand-200 uppercase tracking-wider"><i class="fa-regular fa-calendar mr-1.5"></i>Dates</dt>
+                            <dd class="mt-1 font-bold">14 – 19 Dec 2026</dd>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/15 rounded-2xl p-4 backdrop-blur">
+                            <dt class="text-xs font-semibold text-brand-200 uppercase tracking-wider"><i class="fa-regular fa-clock mr-1.5"></i>Timings</dt>
+                            <dd class="mt-1 font-bold">6:00 – 9:30 PM IST</dd>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/15 rounded-2xl p-4 backdrop-blur">
+                            <dt class="text-xs font-semibold text-brand-200 uppercase tracking-wider"><i class="fa-solid fa-laptop mr-1.5"></i>Mode</dt>
+                            <dd class="mt-1 font-bold">Online</dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center gap-2 bg-white text-brand-800 hover:bg-brand-50 font-bold px-6 py-3.5 rounded-xl shadow-lg shadow-black/20 transition">
+                            Register on ATAL Portal <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                        </a>
+                        <button type="button" data-ics="all"
+                                class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 ring-1 ring-white/25 font-bold px-6 py-3.5 rounded-xl transition">
+                            <i class="fa-regular fa-calendar-plus"></i> Add to Calendar
+                        </button>
+                        <button type="button" id="share-btn"
+                                class="inline-flex items-center gap-2 hover:bg-white/10 font-semibold px-4 py-3.5 rounded-xl transition" aria-label="Share this programme">
+                            <i class="fa-solid fa-share-nodes"></i> <span class="hidden sm:inline">Share</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Countdown card -->
+                <div class="lg:col-span-5 animate-fadeUp" style="animation-delay:.15s">
+                    <div class="bg-white/10 ring-1 ring-white/20 backdrop-blur-xl rounded-3xl p-6 sm:p-8 shadow-2xl">
+                        <p id="countdown-label" class="text-sm font-semibold text-brand-100 flex items-center gap-2">
+                            <i class="fa-solid fa-hourglass-half"></i> Programme begins in
+                        </p>
+                        <div id="countdown" class="mt-4 grid grid-cols-4 gap-2 sm:gap-3 text-center" aria-live="polite">
+                            <div class="bg-white/10 rounded-2xl py-4"><span id="cd-days" class="block text-3xl sm:text-4xl font-black tabular-nums">--</span><span class="text-[11px] uppercase tracking-wider text-brand-200 font-semibold">Days</span></div>
+                            <div class="bg-white/10 rounded-2xl py-4"><span id="cd-hours" class="block text-3xl sm:text-4xl font-black tabular-nums">--</span><span class="text-[11px] uppercase tracking-wider text-brand-200 font-semibold">Hours</span></div>
+                            <div class="bg-white/10 rounded-2xl py-4"><span id="cd-mins" class="block text-3xl sm:text-4xl font-black tabular-nums">--</span><span class="text-[11px] uppercase tracking-wider text-brand-200 font-semibold">Mins</span></div>
+                            <div class="bg-white/10 rounded-2xl py-4"><span id="cd-secs" class="block text-3xl sm:text-4xl font-black tabular-nums">--</span><span class="text-[11px] uppercase tracking-wider text-brand-200 font-semibold">Secs</span></div>
+                        </div>
+                        <div id="countdown-done" class="hidden mt-4 rounded-2xl bg-emerald-400/15 ring-1 ring-emerald-300/30 p-4 text-emerald-100 font-semibold"></div>
+
+                        <div class="mt-6 pt-6 border-t border-white/15 space-y-3 text-sm">
+                            <div class="flex items-start gap-3"><i class="fa-solid fa-building-columns mt-0.5 text-cyan-300 w-4"></i><span>Lakireddy Bali Reddy College of Engineering, Mylavaram, A.P.</span></div>
+                            <div class="flex items-start gap-3"><i class="fa-solid fa-microchip mt-0.5 text-cyan-300 w-4"></i><span>Thrust Area: Advanced Computing (Super Computing, AI &amp; Data Science)</span></div>
+                            <div class="flex items-start gap-3"><i class="fa-solid fa-certificate mt-0.5 text-cyan-300 w-4"></i><span>Free registration, course materials &amp; certification</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats strip -->
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+                <div class="grid grid-cols-3 gap-px bg-white/10 rounded-2xl overflow-hidden ring-1 ring-white/15">
+                    <div class="bg-slate-950/40 p-5 text-center"><p class="text-3xl font-black">6</p><p class="text-xs text-brand-200 font-semibold uppercase tracking-wider mt-1">Days</p></div>
+                    <div class="bg-slate-950/40 p-5 text-center"><p class="text-3xl font-black">9</p><p class="text-xs text-brand-200 font-semibold uppercase tracking-wider mt-1">Expert Speakers</p></div>
+                    <div class="bg-slate-950/40 p-5 text-center"><p class="text-3xl font-black">3</p><p class="text-xs text-brand-200 font-semibold uppercase tracking-wider mt-1">Core Tracks</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ABOUT ================= -->
+        <section id="about" class="py-20 lg:py-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+                    <div class="reveal">
+                        <p class="text-brand-600 font-bold text-sm uppercase tracking-wider">About the Programme</p>
+                        <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-slate-900">Where intelligent algorithms meet materials and machines</h2>
+                        <p class="mt-5 text-slate-600 leading-relaxed">
+                            This AICTE ATAL Academy sponsored programme equips faculty, research scholars and industry professionals with
+                            the knowledge and practical skills to apply modern AI across two frontier domains: <strong class="text-slate-800">materials discovery</strong>
+                            and <strong class="text-slate-800">autonomous aerial systems</strong>. Explainable AI is the common thread, so the solutions you build stay transparent and trustworthy.
+                        </p>
+
+                        <div class="mt-8 bg-white rounded-2xl ring-1 ring-slate-200 p-6 shadow-sm">
+                            <div class="flex items-start gap-4">
+                                <span class="w-12 h-12 shrink-0 rounded-xl bg-brand-50 text-brand-700 grid place-items-center"><i class="fa-solid fa-building-columns text-xl"></i></span>
+                                <div>
+                                    <h3 class="font-bold text-slate-900">Lakireddy Bali Reddy College of Engineering</h3>
+                                    <p class="text-sm text-slate-500 mt-0.5">Mylavaram, Andhra Pradesh · Department of AI &amp; Data Science</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <span class="text-xs font-semibold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full">Autonomous</span>
+                                        <span class="text-xs font-semibold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">NAAC 'A' Grade</span>
+                                        <span class="text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">NBA Tier-1 Certified</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal">
+                        <h3 class="font-bold text-slate-900 text-lg mb-5">Programme Objectives</h3>
+                        <ol class="space-y-4">
+                            <li class="group flex gap-5 bg-white rounded-2xl ring-1 ring-slate-200 p-5 shadow-sm hover:shadow-md hover:ring-brand-200 transition">
+                                <span class="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-violet-500 to-brand-600 text-white grid place-items-center shadow-md"><i class="fa-solid fa-brain"></i></span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900">Explainable AI (XAI)</h4>
+                                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">Develop expertise in AI and XAI to build transparent, trustworthy and intelligent engineering solutions.</p>
+                                </div>
+                            </li>
+                            <li class="group flex gap-5 bg-white rounded-2xl ring-1 ring-slate-200 p-5 shadow-sm hover:shadow-md hover:ring-brand-200 transition">
+                                <span class="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white grid place-items-center shadow-md"><i class="fa-solid fa-atom"></i></span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900">Materials Informatics</h4>
+                                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">Machine learning and Graph Neural Networks for materials analysis, property prediction and accelerated materials discovery.</p>
+                                </div>
+                            </li>
+                            <li class="group flex gap-5 bg-white rounded-2xl ring-1 ring-slate-200 p-5 shadow-sm hover:shadow-md hover:ring-brand-200 transition">
+                                <span class="w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white grid place-items-center shadow-md"><i class="fa-solid fa-helicopter"></i></span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900">Autonomous Drone Systems</h4>
+                                    <p class="text-sm text-slate-600 mt-1 leading-relaxed">Practical skills in AI-enabled UAVs: computer vision, navigation, obstacle detection, surveying, mapping and multi-agent coordination.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= KEY TOPICS ================= -->
+        <section id="topics" class="py-20 lg:py-28 bg-white border-y border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto reveal">
+                    <p class="text-brand-600 font-bold text-sm uppercase tracking-wider">Key Topics</p>
+                    <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-slate-900">What you will learn</h2>
+                    <p class="mt-4 text-slate-600">Eight focus areas spanning theory, tools and hands-on applications.</p>
+                </div>
+                <div id="topics-grid" class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+            </div>
+        </section>
+
+        <!-- ================= SPEAKERS ================= -->
+        <section id="speakers" class="py-20 lg:py-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
+                    <div class="max-w-2xl">
+                        <p class="text-brand-600 font-bold text-sm uppercase tracking-wider">Resource Persons</p>
+                        <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-slate-900">Distinguished speakers</h2>
+                        <p class="mt-4 text-slate-600">Experts from IITs, DRDO and global industry, with more than 130 years of combined experience.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                            <input id="speaker-search" type="search" placeholder="Search speakers…" aria-label="Search speakers"
+                                   class="w-full sm:w-56 pl-10 pr-4 py-2.5 rounded-xl bg-white ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-500 outline-none text-sm">
+                        </div>
+                        <div id="speaker-filters" class="flex gap-1 bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar" role="group" aria-label="Filter speakers">
+                            <button data-filter="all" class="speaker-filter px-3.5 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition">All</button>
+                            <button data-filter="academia" class="speaker-filter px-3.5 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition">Academia</button>
+                            <button data-filter="research" class="speaker-filter px-3.5 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition">R&amp;D</button>
+                            <button data-filter="industry" class="speaker-filter px-3.5 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition">Industry</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="speakers-grid" class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                <p id="speakers-empty" class="hidden mt-12 text-center text-slate-500"><i class="fa-regular fa-face-frown mr-2"></i>No speakers match your search.</p>
+            </div>
+        </section>
+
+        <!-- ================= SCHEDULE ================= -->
+        <section id="schedule" class="py-20 lg:py-28 bg-white border-y border-slate-200">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto reveal">
+                    <p class="text-brand-600 font-bold text-sm uppercase tracking-wider">Programme Schedule</p>
+                    <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-slate-900">Six days, day by day</h2>
+                    <p class="mt-4 text-slate-600">Days 1–5 run 6:00 – 9:30 PM IST. Day 6 runs 2:00 – 7:30 PM IST and includes the online test, feedback and valedictory session.</p>
+                </div>
+
+                <div class="mt-8 flex items-start gap-3 bg-amber-50 ring-1 ring-amber-200 text-amber-800 rounded-2xl px-5 py-4 text-sm reveal">
+                    <i class="fa-solid fa-circle-info mt-0.5"></i>
+                    <p><strong>Tentative schedule.</strong> Session titles and speaker assignments are indicative and may change. The final timetable will be shared with registered participants.</p>
+                </div>
+
+                <div id="day-tabs" role="tablist" aria-label="Programme days" class="mt-8 flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center"></div>
+                <div id="day-panels" class="mt-6"></div>
+            </div>
+        </section>
+
+        <!-- ================= REGISTRATION ================= -->
+        <section id="register" class="py-20 lg:py-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-800 to-slate-900 text-white p-8 sm:p-12 lg:p-16 reveal">
+                    <div class="absolute inset-0 grid-bg opacity-60"></div>
+                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl"></div>
+
+                    <div class="relative grid lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <p class="text-cyan-300 font-bold text-sm uppercase tracking-wider">How to Register</p>
+                            <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Secure your seat in four steps</h2>
+                            <p class="mt-4 text-brand-100/90 leading-relaxed">
+                                Registration is handled only through the official AICTE ATAL Academy portal. It is completely free, with no charge for registration, course materials or certification.
+                            </p>
+                            <div class="mt-8 flex flex-wrap gap-3">
+                                <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
+                                   class="inline-flex items-center gap-2 bg-white text-brand-800 hover:bg-brand-50 font-bold px-6 py-3.5 rounded-xl shadow-lg transition">
+                                    Go to atalacademy.aicte-india.org <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                                </a>
+                            </div>
+                            <p class="mt-4 text-xs text-brand-200"><i class="fa-solid fa-shield-halved mr-1.5"></i>This page never collects payments. Beware of unofficial registration links.</p>
+                        </div>
+
+                        <ol class="space-y-3">
+                            <li class="flex gap-4 bg-white/10 ring-1 ring-white/15 rounded-2xl p-5 backdrop-blur">
+                                <span class="w-9 h-9 shrink-0 rounded-full bg-white text-brand-800 font-black grid place-items-center">1</span>
+                                <div><h3 class="font-bold">Create or sign in to your account</h3><p class="text-sm text-brand-100/80 mt-0.5">Visit the AICTE ATAL Academy portal and log in, or sign up as a new participant.</p></div>
+                            </li>
+                            <li class="flex gap-4 bg-white/10 ring-1 ring-white/15 rounded-2xl p-5 backdrop-blur">
+                                <span class="w-9 h-9 shrink-0 rounded-full bg-white text-brand-800 font-black grid place-items-center">2</span>
+                                <div><h3 class="font-bold">Find this FDP</h3><p class="text-sm text-brand-100/80 mt-0.5">Search for <em>"AI-Driven Materials Intelligence and Autonomous Systems"</em> under the thrust area Advanced Computing.</p></div>
+                            </li>
+                            <li class="flex gap-4 bg-white/10 ring-1 ring-white/15 rounded-2xl p-5 backdrop-blur">
+                                <span class="w-9 h-9 shrink-0 rounded-full bg-white text-brand-800 font-black grid place-items-center">3</span>
+                                <div><h3 class="font-bold">Apply for the programme</h3><p class="text-sm text-brand-100/80 mt-0.5">Check that the host is LBRCE, Mylavaram and the dates are 14–19 Dec 2026, then submit your application.</p></div>
+                            </li>
+                            <li class="flex gap-4 bg-white/10 ring-1 ring-white/15 rounded-2xl p-5 backdrop-blur">
+                                <span class="w-9 h-9 shrink-0 rounded-full bg-white text-brand-800 font-black grid place-items-center">4</span>
+                                <div><h3 class="font-bold">Save the dates</h3><p class="text-sm text-brand-100/80 mt-0.5">Add the sessions to your calendar and watch for joining details from the organisers.
+                                    <button type="button" data-ics="all" class="ml-1 underline underline-offset-2 font-semibold text-white hover:text-cyan-200">Download calendar file</button></p></div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FAQ ================= -->
+        <section id="faq" class="py-20 lg:py-28 bg-white border-y border-slate-200">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center reveal">
+                    <p class="text-brand-600 font-bold text-sm uppercase tracking-wider">FAQ</p>
+                    <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-slate-900">Frequently asked questions</h2>
+                </div>
+                <div id="faq-list" class="mt-12 space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- ================= CONTACT ================= -->
+        <section id="contact" class="py-20 lg:py-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto reveal">
+                    <p class="text-brand-600 font-bold text-sm uppercase tracking-wider">Contact</p>
+                    <h2 class="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-slate-900">Get in touch with the coordinators</h2>
+                    <p class="mt-4 text-slate-600">Have a question about the programme? Reach out directly or send an enquiry below.</p>
+                </div>
+
+                <div class="mt-14 grid lg:grid-cols-5 gap-6">
+                    <!-- Coordinators -->
+                    <div class="lg:col-span-2 space-y-5 reveal">
+                        <article class="bg-white rounded-2xl ring-1 ring-slate-200 p-6 shadow-sm">
+                            <div class="flex items-center gap-4">
+                                <span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-800 text-white grid place-items-center font-black text-lg">PB</span>
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-brand-600">Coordinator</span>
+                                    <h3 class="font-bold text-slate-900">Dr. P. Bhagath</h3>
+                                    <p class="text-sm text-slate-500">Professor &amp; HoD, AI&amp;DS, LBRCE</p>
+                                </div>
+                            </div>
+                            <div class="mt-5 space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <a href="mailto:bhagath@lbrce.ac.in" class="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-brand-50 hover:text-brand-700 text-sm font-medium transition min-w-0">
+                                        <i class="fa-regular fa-envelope text-brand-600"></i><span class="truncate">bhagath@lbrce.ac.in</span>
+                                    </a>
+                                    <button type="button" data-copy="bhagath@lbrce.ac.in" class="w-11 h-11 shrink-0 grid place-items-center rounded-xl bg-slate-50 hover:bg-brand-50 text-slate-500 hover:text-brand-700 transition" aria-label="Copy email address">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <a href="tel:+917576917879" class="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 hover:bg-brand-50 hover:text-brand-700 text-sm font-medium transition">
+                                        <i class="fa-solid fa-phone text-brand-600"></i>+91 75769 17879
+                                    </a>
+                                    <a href="https://wa.me/917576917879?text=Hello%2C%20I%20have%20a%20query%20about%20the%20ATAL%20FDP%20on%20AI-Driven%20Materials%20Intelligence%20and%20Autonomous%20Systems." target="_blank" rel="noopener noreferrer"
+                                       class="w-11 h-11 shrink-0 grid place-items-center rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-500 hover:text-emerald-600 transition" aria-label="Message on WhatsApp">
+                                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="bg-white rounded-2xl ring-1 ring-slate-200 p-6 shadow-sm">
+                            <div class="flex items-center gap-4">
+                                <span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-700 text-white grid place-items-center font-black text-lg">RB</span>
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-700">Co-Coordinator</span>
+                                    <h3 class="font-bold text-slate-900">Dr. Ch. Rajendra Babu</h3>
+                                    <p class="text-sm text-slate-500">Professor, AI&amp;DS, LBRCE</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="bg-white rounded-2xl ring-1 ring-slate-200 p-6 shadow-sm">
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-600"></i>Organising Institution</h3>
+                            <p class="mt-2 text-sm text-slate-600 leading-relaxed">Department of Artificial Intelligence &amp; Data Science<br>Lakireddy Bali Reddy College of Engineering (Autonomous)<br>Mylavaram, Andhra Pradesh</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Lakireddy+Bali+Reddy+College+of+Engineering+Mylavaram" target="_blank" rel="noopener noreferrer"
+                               class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800">View on map <i class="fa-solid fa-arrow-right text-xs"></i></a>
+                        </article>
+                    </div>
+
+                    <!-- Enquiry form -->
+                    <div class="lg:col-span-3 reveal">
+                        <form id="enquiry-form" novalidate class="bg-white rounded-2xl ring-1 ring-slate-200 p-6 sm:p-8 shadow-sm h-full">
+                            <h3 class="font-bold text-slate-900 text-lg">Send an enquiry</h3>
+                            <p class="text-sm text-slate-500 mt-1">Your email app will open with the message ready to send to the coordinator.</p>
+
+                            <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="f-name" class="block text-sm font-semibold text-slate-700 mb-1.5">Full name <span class="text-rose-500">*</span></label>
+                                    <input id="f-name" name="name" type="text" autocomplete="name" required
+                                           class="w-full px-4 py-3 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-500 outline-none text-sm transition">
+                                    <p class="field-error hidden text-xs text-rose-600 mt-1.5"></p>
+                                </div>
+                                <div>
+                                    <label for="f-email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email <span class="text-rose-500">*</span></label>
+                                    <input id="f-email" name="email" type="email" autocomplete="email" required
+                                           class="w-full px-4 py-3 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-500 outline-none text-sm transition">
+                                    <p class="field-error hidden text-xs text-rose-600 mt-1.5"></p>
+                                </div>
+                                <div>
+                                    <label for="f-inst" class="block text-sm font-semibold text-slate-700 mb-1.5">Institution / Organisation <span class="text-rose-500">*</span></label>
+                                    <input id="f-inst" name="institution" type="text" autocomplete="organization" required
+                                           class="w-full px-4 py-3 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-500 outline-none text-sm transition">
+                                    <p class="field-error hidden text-xs text-rose-600 mt-1.5"></p>
+                                </div>
+                                <div>
+                                    <label for="f-role" class="block text-sm font-semibold text-slate-700 mb-1.5">I am a</label>
+                                    <select id="f-role" name="role"
+                                            class="w-full px-4 py-3 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-500 outline-none text-sm bg-white transition">
+                                        <option>Faculty member</option>
+                                        <option>Research scholar</option>
+                                        <option>Industry professional</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label for="f-msg" class="block text-sm font-semibold text-slate-700 mb-1.5">Your question <span class="text-rose-500">*</span></label>
+                                    <textarea id="f-msg" name="message" rows="5" required maxlength="1500"
+                                              class="w-full px-4 py-3 rounded-xl ring-1 ring-slate-200 focus:ring-2 focus:ring-brand-500 outline-none text-sm resize-y transition"></textarea>
+                                    <div class="flex justify-between mt-1.5">
+                                        <p class="field-error hidden text-xs text-rose-600"></p>
+                                        <span id="msg-count" class="ml-auto text-xs text-slate-400 tabular-nums">0 / 1500</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 flex flex-col sm:flex-row sm:items-center gap-3">
+                                <button type="submit" class="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold px-6 py-3 rounded-xl shadow-md shadow-brand-600/25 transition">
+                                    <i class="fa-regular fa-paper-plane"></i> Send Enquiry
+                                </button>
+                                <p class="text-xs text-slate-400">Drafts are saved on this device until you send them.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-950 text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 md:grid-cols-3">
+            <div>
+                <div class="flex items-center gap-2.5">
+                    <img src="assets/aicte-logo.png" alt="AICTE logo" width="40" height="40" class="w-10 h-10 rounded-full bg-white p-0.5">
+                    <span class="font-extrabold text-white">ATAL FDP 2026</span>
+                </div>
+                <p class="mt-4 text-sm leading-relaxed">AICTE ATAL Online FDP on AI-Driven Materials Intelligence and Autonomous Systems. Organised by the Department of AI&amp;DS, LBRCE, Mylavaram.</p>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-sm uppercase tracking-wider">Quick Links</h3>
+                <ul class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                    <li><a href="#about" class="hover:text-white transition">About</a></li>
+                    <li><a href="#topics" class="hover:text-white transition">Topics</a></li>
+                    <li><a href="#speakers" class="hover:text-white transition">Speakers</a></li>
+                    <li><a href="#schedule" class="hover:text-white transition">Schedule</a></li>
+                    <li><a href="#register" class="hover:text-white transition">Register</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-bold text-sm uppercase tracking-wider">Official Portal</h3>
+                <p class="mt-4 text-sm">All registrations are processed exclusively by AICTE ATAL Academy.</p>
+                <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
+                   class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-brand-300 hover:text-white transition">
+                    atalacademy.aicte-india.org <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </a>
+            </div>
+        </div>
+        <div class="border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between gap-2 text-xs">
+                <p>&copy; <span id="year"></span> Department of AI&amp;DS, Lakireddy Bali Reddy College of Engineering. All rights reserved.</p>
+                <p>Sponsored by AICTE Training and Learning (ATAL) Academy</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top -->
+    <button id="to-top" aria-label="Back to top"
+            class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-600/30 grid place-items-center opacity-0 translate-y-4 pointer-events-none transition-all">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Toast -->
+    <div id="toast" role="status" aria-live="polite"
+         class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] bg-slate-900 text-white text-sm font-medium px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 opacity-0 translate-y-4 pointer-events-none transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i><span id="toast-msg"></span>
+    </div>
+
+    <script>
+    (() => {
+        'use strict';
+
+        /* ==========================================================
+           DATA
+           ========================================================== */
+        const PORTAL_URL = 'https://atalacademy.aicte-india.org';
+        const FDP_TITLE = 'AI-Driven Materials Intelligence and Autonomous Systems';
+        const IST = '+05:30';
+
+        const TOPICS = [
+            { icon: 'fa-robot',          color: 'from-violet-500 to-brand-600', title: 'AI & Machine Learning',      text: 'Core ML foundations, model building and evaluation for engineering problems.' },
+            { icon: 'fa-magnifying-glass-chart', color: 'from-fuchsia-500 to-violet-600', title: 'Explainable AI (XAI)', text: 'Interpretability methods for transparent, accountable and trustworthy AI.' },
+            { icon: 'fa-atom',           color: 'from-cyan-500 to-blue-600',    title: 'Materials Informatics',      text: 'Data-driven analysis of materials structure, processing and properties.' },
+            { icon: 'fa-diagram-project',color: 'from-sky-500 to-indigo-600',   title: 'Graph Neural Networks',      text: 'Learning on crystal and molecular graphs for property prediction.' },
+            { icon: 'fa-flask',          color: 'from-teal-500 to-cyan-600',    title: 'Accelerated Discovery',      text: 'ML-guided screening to speed up the search for new materials.' },
+            { icon: 'fa-helicopter',     color: 'from-emerald-500 to-teal-600', title: 'AI-Enabled UAVs',            text: 'Autonomy stacks, navigation and obstacle detection for drones.' },
+            { icon: 'fa-eye',            color: 'from-amber-500 to-orange-600', title: 'Computer Vision',            text: 'Perception pipelines for detection, tracking and scene understanding.' },
+            { icon: 'fa-map-location-dot', color: 'from-rose-500 to-pink-600',  title: 'Surveying & Multi-Agent',    text: 'Aerial mapping, surveying and coordinated multi-drone missions.' },
+        ];
+
+        // type: academia | research | industry
+        const SPEAKERS = [
+            { name: 'Prof. Pradip K Das',     org: 'IIT Guwahati',          exp: 26, type: 'academia' },
+            { name: 'Dr. T Ram Prabhu',       org: 'DRDO, Bengaluru',       exp: 16, type: 'research' },
+            { name: 'Prof. D. Pamu',          org: 'IIT Guwahati',          exp: 17, type: 'academia' },
+            { name: 'Dr. Ajay Dashora',       org: 'IIT Guwahati',          exp: 13, type: 'academia' },
+            { name: 'Dr. Shashi Sekhar Jha',  org: 'IIT Ropar',             exp: 10, type: 'academia' },
+            { name: 'Dr. Ritesh Ratti',       org: 'EY, Singapore',         exp: 15, type: 'industry' },
+            { name: 'Mr. Nahar Singh',        org: 'GoDaddy, Gurgaon',      exp: 15, type: 'industry' },
+            { name: 'Dr. Tushar Semwal',      org: 'Presight AI, Dubai',    exp: 10, type: 'industry' },
+            { name: 'Dr. Sonia Semwal',       org: 'Zysec.ai, Abu Dhabi',   exp: 10, type: 'industry' },
+        ];
+
+        const TYPE_META = {
+            academia: { label: 'Academia', badge: 'bg-brand-50 text-brand-700',    grad: 'from-brand-500 to-brand-800',   icon: 'fa-graduation-cap' },
+            research: { label: 'R&D',      badge: 'bg-amber-50 text-amber-700',    grad: 'from-amber-500 to-orange-700',  icon: 'fa-shield-halved' },
+            industry: { label: 'Industry', badge: 'bg-emerald-50 text-emerald-700',grad: 'from-emerald-500 to-teal-700',  icon: 'fa-briefcase' },
+        };
+
+        // Tentative, indicative schedule. Times in IST.
+        const SCHEDULE = [
+            { day: 1, date: '2026-12-14', theme: 'Foundations of AI', sessions: [
+                { start: '18:00', end: '18:30', kind: 'ceremony', title: 'Inaugural Session', speaker: 'LBRCE Leadership & Coordinators' },
+                { start: '18:30', end: '20:00', kind: 'talk', title: 'Keynote: AI from Foundations to Frontiers', speaker: 'Prof. Pradip K Das' },
+                { start: '20:00', end: '21:30', kind: 'lab',  title: 'Hands-on: Building ML Pipelines in Python', speaker: 'Mr. Nahar Singh' },
+            ]},
+            { day: 2, date: '2026-12-15', theme: 'Explainable & Trustworthy AI', sessions: [
+                { start: '18:00', end: '19:45', kind: 'talk', title: 'Explainable AI: Methods for Transparent Models', speaker: 'Dr. Ritesh Ratti' },
+                { start: '19:45', end: '21:30', kind: 'talk', title: 'Trustworthy and Secure AI Systems', speaker: 'Dr. Sonia Semwal' },
+            ]},
+            { day: 3, date: '2026-12-16', theme: 'Materials Informatics', sessions: [
+                { start: '18:00', end: '19:45', kind: 'talk', title: 'Machine Learning for Advanced Engineering Materials', speaker: 'Dr. T Ram Prabhu' },
+                { start: '19:45', end: '21:30', kind: 'talk', title: 'Data-Driven Design of Functional Materials', speaker: 'Prof. D. Pamu' },
+            ]},
+            { day: 4, date: '2026-12-17', theme: 'GNNs & Accelerated Discovery', sessions: [
+                { start: '18:00', end: '19:45', kind: 'talk', title: 'Graph Neural Networks for Materials Property Prediction', speaker: 'Dr. Tushar Semwal' },
+                { start: '19:45', end: '21:30', kind: 'lab',  title: 'Hands-on: Explainable GNN Models for Materials Discovery', speaker: 'Dr. Tushar Semwal' },
+            ]},
+            { day: 5, date: '2026-12-18', theme: 'Autonomous Drone Systems', sessions: [
+                { start: '18:00', end: '19:45', kind: 'talk', title: 'AI-Enabled UAVs for Surveying and Mapping', speaker: 'Dr. Ajay Dashora' },
+                { start: '19:45', end: '21:30', kind: 'talk', title: 'Vision-Based Navigation, Obstacle Detection & Multi-Agent Coordination', speaker: 'Dr. Shashi Sekhar Jha' },
+            ]},
+            { day: 6, date: '2026-12-19', theme: 'Synthesis, Assessment & Valedictory', sessions: [
+                { start: '14:00', end: '15:45', kind: 'talk',     title: 'Integrating XAI, Materials Intelligence & Autonomy: Case Studies', speaker: 'Resource Persons' },
+                { start: '15:45', end: '17:30', kind: 'panel',    title: 'Panel Discussion: Research Directions & Industry Outlook', speaker: 'Expert Panel' },
+                { start: '17:30', end: '18:30', kind: 'test',     title: 'Online Test', speaker: 'All Participants' },
+                { start: '18:30', end: '19:00', kind: 'feedback', title: 'Participant Feedback', speaker: 'All Participants' },
+                { start: '19:00', end: '19:30', kind: 'ceremony', title: 'Valedictory Session', speaker: 'LBRCE Leadership & Coordinators' },
+            ]},
+        ];
+
+        const KIND_META = {
+            talk:     { label: 'Lecture',   icon: 'fa-chalkboard-user',   cls: 'bg-brand-50 text-brand-700' },
+            lab:      { label: 'Hands-on',  icon: 'fa-laptop-code',       cls: 'bg-cyan-50 text-cyan-700' },
+            panel:    { label: 'Panel',     icon: 'fa-users',             cls: 'bg-violet-50 text-violet-700' },
+            ceremony: { label: 'Ceremony',  icon: 'fa-award',             cls: 'bg-amber-50 text-amber-700' },
+            test:     { label: 'Assessment',icon: 'fa-file-pen',          cls: 'bg-rose-50 text-rose-700' },
+            feedback: { label: 'Feedback',  icon: 'fa-comment-dots',      cls: 'bg-emerald-50 text-emerald-700' },
+        };
+
+        const FAQS = [
+            { q: 'Is there any registration fee?', a: 'No. The programme is 100% free: there is no charge for registration, course materials or certification.' },
+            { q: 'Where do I register?', a: `Registration is accepted only through the official AICTE ATAL Academy portal at <a class="text-brand-700 font-semibold underline underline-offset-2" href="${PORTAL_URL}" target="_blank" rel="noopener noreferrer">atalacademy.aicte-india.org</a>. This website only provides information.` },
+            { q: 'Who can attend?', a: 'The programme is designed for faculty members, research scholars and industry professionals interested in AI, data science, materials engineering and autonomous systems.' },
+            { q: 'What are the dates and timings?', a: 'The FDP runs from 14 to 19 December 2026. Days 1–5 run from 6:00 PM to 9:30 PM IST. Day 6 (19 December) runs from 2:00 PM to 7:30 PM IST and includes the online test, feedback and the valedictory session.' },
+            { q: 'Is the programme online or in person?', a: 'It is fully online and delivered under the AICTE ATAL Academy. Joining details are shared with registered participants.' },
+            { q: 'How do I earn the certificate?', a: 'Certificates are issued as per AICTE ATAL Academy norms, which typically require attending the sessions, completing the online test on Day 6 and submitting feedback.' },
+            { q: 'Who do I contact for queries?', a: 'Contact the coordinator, Dr. P. Bhagath (Professor & HoD, AI&DS), at <a class="text-brand-700 font-semibold underline underline-offset-2" href="mailto:bhagath@lbrce.ac.in">bhagath@lbrce.ac.in</a> or +91 75769 17879.' },
+        ];
+
+        /* ==========================================================
+           HELPERS
+           ========================================================== */
+        const $ = (sel, root = document) => root.querySelector(sel);
+        const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const initials = name => name.replace(/^(Prof\.|Dr\.|Mr\.|Ms\.)\s*/, '').split(/\s+/).filter(w => /^[A-Za-z]/.test(w) && w.length > 1).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+        const istDate = (date, time) => new Date(`${date}T${time}:00${IST}`);
+        const fmt12 = t => { const [h, m] = t.split(':').map(Number); return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
+        const fmtDate = (d, opts) => new Date(`${d}T12:00:00${IST}`).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', ...opts });
+
+        let toastTimer;
+        function toast(msg, icon = 'fa-circle-check text-emerald-400') {
+            const el = $('#toast');
+            $('#toast-msg').textContent = msg;
+            el.firstElementChild.className = `fa-solid ${icon}`;
+            el.classList.remove('opacity-0', 'translate-y-4');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.add('opacity-0', 'translate-y-4'), 2800);
+        }
+
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch {
+                const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
+                document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+            }
+        }
+
+        /* ==========================================================
+           TOPICS
+           ========================================================== */
+        $('#topics-grid').innerHTML = TOPICS.map(t => `
+            <article class="reveal group relative bg-slate-50 hover:bg-white rounded-2xl p-6 ring-1 ring-slate-200 hover:ring-brand-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <span class="w-12 h-12 rounded-xl bg-gradient-to-br ${t.color} text-white grid place-items-center shadow-md group-hover:scale-110 transition-transform">
+                    <i class="fa-solid ${t.icon}"></i>
+                </span>
+                <h3 class="mt-5 font-bold text-slate-900">${esc(t.title)}</h3>
+                <p class="mt-2 text-sm text-slate-600 leading-relaxed">${esc(t.text)}</p>
+            </article>`).join('');
+
+        /* ==========================================================
+           SPEAKERS
+           ========================================================== */
+        const sessionsBySpeaker = {};
+        SCHEDULE.forEach(d => d.sessions.forEach(s => {
+            (sessionsBySpeaker[s.speaker] ||= []).push({ day: d.day, title: s.title });
+        }));
+
+        $('#speakers-grid').innerHTML = SPEAKERS.map(s => {
+            const m = TYPE_META[s.type];
+            const talks = sessionsBySpeaker[s.name] || [];
+            const haystack = `${s.name} ${s.org} ${m.label} ${talks.map(t => t.title).join(' ')}`.toLowerCase();
+            return `
+            <article class="speaker-card reveal bg-white rounded-2xl ring-1 ring-slate-200 p-6 shadow-sm hover:shadow-xl hover:ring-brand-200 hover:-translate-y-1 transition-all duration-300"
+                     data-type="${s.type}" data-search="${esc(haystack)}">
+                <div class="flex items-start gap-4">
+                    <span class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br ${m.grad} text-white grid place-items-center text-xl font-black shadow-md">${initials(s.name)}</span>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-slate-900 text-lg leading-snug">${esc(s.name)}</h3>
+                        <p class="text-sm text-slate-500 flex items-center gap-1.5 mt-0.5"><i class="fa-solid ${m.icon} text-xs"></i>${esc(s.org)}</p>
+                        <div class="mt-2.5 flex flex-wrap gap-1.5">
+                            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${m.badge}">${m.label}</span>
+                            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">${s.exp}+ yrs experience</span>
+                        </div>
+                    </div>
+                </div>
+                ${talks.length ? `
+                <div class="mt-5 pt-4 border-t border-slate-100 space-y-2">
+                    ${talks.map(t => `
+                    <button type="button" data-goto-day="${t.day}" class="w-full text-left flex items-start gap-3 group/t rounded-lg -mx-1 px-1 py-1 hover:bg-brand-50 transition">
+                        <span class="shrink-0 text-[11px] font-bold text-brand-700 bg-brand-50 group-hover/t:bg-white rounded-md px-1.5 py-0.5 mt-0.5">Day ${t.day}</span>
+                        <span class="text-sm text-slate-600 group-hover/t:text-brand-800 leading-snug">${esc(t.title)}</span>
+                    </button>`).join('')}
+                </div>` : ''}
+            </article>`;
+        }).join('');
+
+        let speakerFilter = 'all';
+        function applySpeakerFilter() {
+            const q = $('#speaker-search').value.trim().toLowerCase();
+            let shown = 0;
+            $$('.speaker-card').forEach(card => {
+                const ok = (speakerFilter === 'all' || card.dataset.type === speakerFilter) && (!q || card.dataset.search.includes(q));
+                card.classList.toggle('hidden', !ok);
+                if (ok) { shown++; card.classList.add('is-visible'); }
+            });
+            $('#speakers-empty').classList.toggle('hidden', shown > 0);
+            $$('.speaker-filter').forEach(b => {
+                const active = b.dataset.filter === speakerFilter;
+                b.setAttribute('aria-pressed', active);
+                b.classList.toggle('bg-white', active);
+                b.classList.toggle('text-brand-700', active);
+                b.classList.toggle('shadow-sm', active);
+                b.classList.toggle('text-slate-600', !active);
+            });
+        }
+        $('#speaker-filters').addEventListener('click', e => {
+            const b = e.target.closest('.speaker-filter');
+            if (!b) return;
+            speakerFilter = b.dataset.filter;
+            applySpeakerFilter();
+        });
+        $('#speaker-search').addEventListener('input', applySpeakerFilter);
+        applySpeakerFilter();
+
+        /* ==========================================================
+           SCHEDULE (tabs + panels)
+           ========================================================== */
+        function sessionStatus(date, s, now) {
+            const st = istDate(date, s.start), en = istDate(date, s.end);
+            if (now >= en) return 'done';
+            if (now >= st) return 'live';
+            return 'upcoming';
+        }
+
+        function renderSchedule() {
+            const now = new Date();
+            $('#day-tabs').innerHTML = SCHEDULE.map(d => `
+                <button type="button" role="tab" id="day-tab-${d.day}" data-day="${d.day}" aria-controls="day-${d.day}-content"
+                        class="day-tab shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm transition-all">
+                    <span class="block">Day ${d.day}</span>
+                    <span class="block text-[11px] font-semibold opacity-75">${fmtDate(d.date, { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                </button>`).join('');
+
+            $('#day-panels').innerHTML = SCHEDULE.map(d => {
+                const first = d.sessions[0].start, last = d.sessions[d.sessions.length - 1].end;
+                return `
+                <div id="day-${d.day}-content" role="tabpanel" aria-labelledby="day-tab-${d.day}" tabindex="0" class="day-content hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50 ring-1 ring-slate-200 rounded-2xl p-5">
+                        <div>
+                            <p class="text-xs font-bold text-brand-600 uppercase tracking-wider">Day ${d.day} · ${fmtDate(d.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                            <h3 class="mt-1 text-xl font-black text-slate-900">${esc(d.theme)}</h3>
+                            <p class="text-sm text-slate-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${fmt12(first)} – ${fmt12(last)} IST</p>
+                        </div>
+                        <button type="button" data-ics="${d.day}" class="inline-flex items-center justify-center gap-2 bg-white ring-1 ring-slate-200 hover:ring-brand-300 hover:text-brand-700 text-sm font-semibold px-4 py-2.5 rounded-xl transition">
+                            <i class="fa-regular fa-calendar-plus"></i> Add Day ${d.day}
+                        </button>
+                    </div>
+                    <ol class="mt-6 relative border-l-2 border-slate-200 ml-3 space-y-5">
+                        ${d.sessions.map(s => {
+                            const k = KIND_META[s.kind];
+                            const status = sessionStatus(d.date, s, now);
+                            const dot = status === 'live' ? 'bg-emerald-500 ring-emerald-100 animate-pulse' : status === 'done' ? 'bg-slate-300 ring-slate-100' : 'bg-brand-600 ring-brand-100';
+                            return `
+                            <li class="relative pl-8">
+                                <span class="absolute -left-[9px] top-6 w-4 h-4 rounded-full ring-4 ${dot}"></span>
+                                <div class="bg-white rounded-2xl ring-1 ${status === 'live' ? 'ring-emerald-300 shadow-lg shadow-emerald-500/10' : 'ring-slate-200'} p-5 hover:shadow-md transition ${status === 'done' ? 'opacity-70' : ''}">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="text-sm font-bold text-slate-900 tabular-nums">${fmt12(s.start)} – ${fmt12(s.end)}</span>
+                                        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${k.cls}"><i class="fa-solid ${k.icon} mr-1"></i>${k.label}</span>
+                                        ${status === 'live' ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white">● Live now</span>' : ''}
+                                        ${status === 'done' ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Completed</span>' : ''}
+                                    </div>
+                                    <h4 class="mt-2 font-bold text-slate-900 leading-snug">${esc(s.title)}</h4>
+                                    <p class="mt-1 text-sm text-slate-500"><i class="fa-regular fa-user mr-1.5"></i>${esc(s.speaker)}</p>
+                                </div>
+                            </li>`;
+                        }).join('')}
+                    </ol>
+                </div>`;
+            }).join('');
+        }
+
+        let currentDay = 1;
+        function switchDay(dayNum, focus = false) {
+            currentDay = Number(dayNum);
+            $$('.day-tab').forEach(tab => {
+                const active = Number(tab.dataset.day) === currentDay;
+                tab.className = active
+                    ? 'day-tab shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm bg-brand-600 text-white shadow-md shadow-brand-600/25 transition-all'
+                    : 'day-tab shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50 transition-all';
+                tab.setAttribute('aria-selected', active);
+                tab.tabIndex = active ? 0 : -1;
+                if (active && focus) tab.focus();
+                if (active) {
+                    // Keep the active tab visible in the horizontal strip without scrolling the page
+                    const strip = tab.parentElement;
+                    const left = tab.offsetLeft - strip.offsetLeft;
+                    if (left < strip.scrollLeft || left + tab.offsetWidth > strip.scrollLeft + strip.clientWidth) {
+                        strip.scrollTo({ left: left - 16, behavior: 'smooth' });
+                    }
+                }
+            });
+            $$('.day-content').forEach(el => el.classList.add('hidden'));
+            const panel = document.getElementById(`day-${currentDay}-content`);
+            panel.classList.remove('hidden');
+            panel.firstElementChild.classList.remove('animate-fadeUp'); void panel.offsetWidth; panel.firstElementChild.classList.add('animate-fadeUp');
+        }
+        window.switchDay = switchDay;
+
+        // Default tab: today's day during the programme, otherwise Day 1
+        function defaultDay() {
+            const todayIST = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+            const match = SCHEDULE.find(d => d.date === todayIST);
+            return match ? match.day : 1;
+        }
+
+        renderSchedule();
+        switchDay(defaultDay());
+
+        $('#day-tabs').addEventListener('click', e => {
+            const tab = e.target.closest('.day-tab');
+            if (tab) switchDay(tab.dataset.day);
+        });
+        $('#day-tabs').addEventListener('keydown', e => {
+            const n = SCHEDULE.length;
+            const map = { ArrowRight: currentDay % n + 1, ArrowLeft: (currentDay + n - 2) % n + 1, Home: 1, End: n };
+            if (map[e.key]) { e.preventDefault(); switchDay(map[e.key], true); }
+        });
+
+        // Speaker card → jump to their day
+        document.addEventListener('click', e => {
+            const b = e.target.closest('[data-goto-day]');
+            if (!b) return;
+            switchDay(b.dataset.gotoDay);
+            document.getElementById('schedule').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Refresh live/completed badges every minute while preserving the active tab
+        setInterval(() => { renderSchedule(); switchDay(currentDay); }, 60000);
+
+        /* ==========================================================
+           CALENDAR (.ics) EXPORT
+           ========================================================== */
+        const icsStamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        const icsEscape = s => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+
+        function buildICS(days) {
+            const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LBRCE AI&DS//ATAL FDP 2026//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+            const now = icsStamp(new Date());
+            days.forEach(d => {
+                const start = istDate(d.date, d.sessions[0].start);
+                const end = istDate(d.date, d.sessions[d.sessions.length - 1].end);
+                const agenda = d.sessions.map(s => `${fmt12(s.start)}–${fmt12(s.end)}: ${s.title} (${s.speaker})`).join('\n');
+                lines.push(
+                    'BEGIN:VEVENT',
+                    `UID:atal-fdp-2026-day${d.day}@lbrce.ac.in`,
+                    `DTSTAMP:${now}`,
+                    `DTSTART:${icsStamp(start)}`,
+                    `DTEND:${icsStamp(end)}`,
+                    `SUMMARY:${icsEscape(`ATAL FDP Day ${d.day}: ${d.theme}`)}`,
+                    `DESCRIPTION:${icsEscape(`${FDP_TITLE}\nOrganised by Dept. of AI&DS, LBRCE\n\nTentative agenda:\n${agenda}\n\nRegister: ${PORTAL_URL}`)}`,
+                    'LOCATION:Online (AICTE ATAL Academy)',
+                    `URL:${PORTAL_URL}`,
+                    'BEGIN:VALARM', 'TRIGGER:-PT30M', 'ACTION:DISPLAY', 'DESCRIPTION:ATAL FDP session starts in 30 minutes', 'END:VALARM',
+                    'END:VEVENT'
+                );
+            });
+            lines.push('END:VCALENDAR');
+            // RFC 5545: fold content lines longer than 75 characters
+            const fold = line => line.length <= 75 ? line : line.match(/.{1,74}/g).join('\r\n ');
+            return lines.map(fold).join('\r\n');
+        }
+
+        function downloadICS(which) {
+            const days = which === 'all' ? SCHEDULE : SCHEDULE.filter(d => d.day === Number(which));
+            const blob = new Blob([buildICS(days)], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = Object.assign(document.createElement('a'), {
+                href: url,
+                download: which === 'all' ? 'ATAL-FDP-2026-LBRCE.ics' : `ATAL-FDP-2026-Day-${which}.ics`,
+            });
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            toast(which === 'all' ? 'Calendar file with all 6 days downloaded' : `Day ${which} calendar file downloaded`);
+        }
+
+        document.addEventListener('click', e => {
+            const b = e.target.closest('[data-ics]');
+            if (b) downloadICS(b.dataset.ics);
+        });
+
+        /* ==========================================================
+           COUNTDOWN
+           ========================================================== */
+        const PROGRAM_START = istDate(SCHEDULE[0].date, SCHEDULE[0].sessions[0].start);
+        const PROGRAM_END = istDate(SCHEDULE.at(-1).date, SCHEDULE.at(-1).sessions.at(-1).end);
+        const pad = n => String(n).padStart(2, '0');
+
+        function tickCountdown() {
+            const now = new Date();
+            if (now < PROGRAM_START) {
+                const diff = PROGRAM_START - now;
+                $('#cd-days').textContent = pad(Math.floor(diff / 864e5));
+                $('#cd-hours').textContent = pad(Math.floor(diff / 36e5) % 24);
+                $('#cd-mins').textContent = pad(Math.floor(diff / 6e4) % 60);
+                $('#cd-secs').textContent = pad(Math.floor(diff / 1e3) % 60);
+                return;
+            }
+            $('#countdown').classList.add('hidden');
+            const done = $('#countdown-done');
+            done.classList.remove('hidden');
+            if (now <= PROGRAM_END) {
+                $('#countdown-label').innerHTML = '<i class="fa-solid fa-tower-broadcast"></i> Programme status';
+                done.innerHTML = `<i class="fa-solid fa-circle text-emerald-400 text-[8px] animate-pulse mr-2 align-middle"></i>The FDP is underway: Day ${defaultDay()} of 6. Check the schedule for today's sessions.`;
+            } else {
+                $('#countdown-label').innerHTML = '<i class="fa-solid fa-flag-checkered"></i> Programme status';
+                done.textContent = 'This FDP has concluded. Thank you to all participants and resource persons!';
+                clearInterval(cdTimer);
+            }
+        }
+        const cdTimer = setInterval(tickCountdown, 1000);
+        tickCountdown();
+
+        /* ==========================================================
+           FAQ ACCORDION
+           ========================================================== */
+        $('#faq-list').innerHTML = FAQS.map((f, i) => `
+            <div class="faq-item reveal bg-slate-50 rounded-2xl ring-1 ring-slate-200 hover:ring-brand-200 transition">
+                <h3>
+                    <button type="button" class="faq-btn w-full flex items-center justify-between gap-4 text-left px-6 py-5 font-bold text-slate-900"
+                            aria-expanded="false" aria-controls="faq-${i}" id="faq-btn-${i}">
+                        ${esc(f.q)}
+                        <span class="faq-icon shrink-0 w-8 h-8 rounded-full bg-white ring-1 ring-slate-200 grid place-items-center text-brand-600 transition-transform duration-300"><i class="fa-solid fa-plus text-sm"></i></span>
+                    </button>
+                </h3>
+                <div id="faq-${i}" role="region" aria-labelledby="faq-btn-${i}" class="faq-body">
+                    <div class="overflow-hidden"><p class="px-6 pb-5 text-slate-600 leading-relaxed">${f.a}</p></div>
+                </div>
+            </div>`).join('');
+
+        $('#faq-list').addEventListener('click', e => {
+            const btn = e.target.closest('.faq-btn');
+            if (!btn) return;
+            const item = btn.closest('.faq-item');
+            const open = !item.classList.contains('open');
+            $$('.faq-item').forEach(el => { el.classList.remove('open'); $('.faq-btn', el).setAttribute('aria-expanded', 'false'); });
+            item.classList.toggle('open', open);
+            btn.setAttribute('aria-expanded', open);
+        });
+
+        /* ==========================================================
+           NAVIGATION: sticky header, mobile drawer, scroll-spy
+           ========================================================== */
+        const header = $('#site-header');
+        const toTop = $('#to-top');
+        function onScroll() {
+            const y = window.scrollY;
+            const scrolled = y > 20;
+            header.classList.toggle('bg-white/85', scrolled);
+            header.classList.toggle('backdrop-blur-lg', scrolled);
+            header.classList.toggle('shadow-sm', scrolled);
+            header.classList.toggle('border-b', scrolled);
+            header.classList.toggle('border-slate-200/70', scrolled);
+            // Light header text while over the dark hero
+            header.classList.toggle('hero-mode', !scrolled);
+            const show = y > 600;
+            toTop.classList.toggle('opacity-0', !show);
+            toTop.classList.toggle('translate-y-4', !show);
+            toTop.classList.toggle('pointer-events-none', !show);
+        }
+        // Hero-mode styles (white text when header is transparent over the hero)
+        const heroStyle = document.createElement('style');
+        heroStyle.textContent = `
+            #site-header.hero-mode .text-slate-900, #site-header.hero-mode .text-slate-600, #site-header.hero-mode .text-slate-700 { color: #fff; }
+            #site-header.hero-mode .text-slate-500 { color: #c7d2fe; }
+            #site-header.hero-mode .nav-link:hover { color: #fff; background: rgba(255,255,255,.1); }
+            #site-header.hero-mode .nav-link.active { color: #fff; background: rgba(255,255,255,.15); }
+            #site-header.hero-mode #menu-btn:hover { background: rgba(255,255,255,.1); }
+            #site-header.hero-mode a.bg-brand-600 { background: #fff; color: #3730a3; }`;
+        document.head.appendChild(heroStyle);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        const drawer = $('#mobile-drawer'), overlay = $('#drawer-overlay'), menuBtn = $('#menu-btn');
+        function setDrawer(open) {
+            drawer.classList.toggle('translate-x-full', !open);
+            overlay.classList.toggle('opacity-0', !open);
+            overlay.classList.toggle('pointer-events-none', !open);
+            drawer.setAttribute('aria-hidden', !open);
+            menuBtn.setAttribute('aria-expanded', open);
+            document.body.style.overflow = open ? 'hidden' : '';
+            if (open) $('#menu-close').focus(); else menuBtn.focus({ preventScroll: true });
+        }
+        menuBtn.addEventListener('click', () => setDrawer(true));
+        $('#menu-close').addEventListener('click', () => setDrawer(false));
+        overlay.addEventListener('click', () => setDrawer(false));
+        $$('.drawer-link').forEach(a => a.addEventListener('click', () => setDrawer(false)));
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !drawer.classList.contains('translate-x-full')) setDrawer(false); });
+
+        // Scroll-spy
+        const navLinks = $$('.nav-link');
+        const spy = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${entry.target.id}`));
+            });
+        }, { rootMargin: '-45% 0px -50% 0px' });
+        $$('main section[id]').forEach(s => spy.observe(s));
+
+        // Reveal on scroll
+        const revealer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); revealer.unobserve(e.target); } });
+        }, { threshold: 0.12 });
+        $$('.reveal').forEach(el => revealer.observe(el));
+
+        /* ==========================================================
+           SHARE & COPY
+           ========================================================== */
+        $('#share-btn').addEventListener('click', async () => {
+            const data = { title: `ATAL FDP: ${FDP_TITLE}`, text: 'Free 6-day AICTE ATAL online FDP, 14–19 Dec 2026, by Dept. of AI&DS, LBRCE.', url: location.href };
+            if (navigator.share) {
+                try { await navigator.share(data); } catch { /* user cancelled */ }
+            } else {
+                await copyText(location.href);
+                toast('Page link copied to clipboard');
+            }
+        });
+
+        document.addEventListener('click', async e => {
+            const b = e.target.closest('[data-copy]');
+            if (!b) return;
+            await copyText(b.dataset.copy);
+            toast('Email address copied');
+        });
+
+        /* ==========================================================
+           ENQUIRY FORM: validation, draft autosave, mailto hand-off
+           ========================================================== */
+        const form = $('#enquiry-form');
+        const DRAFT_KEY = 'atal-fdp-enquiry-draft';
+        const fields = ['name', 'email', 'institution', 'role', 'message'];
+
+        try {
+            const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
+            fields.forEach(f => { if (draft[f]) form.elements[f].value = draft[f]; });
+        } catch { /* ignore corrupt draft */ }
+
+        const msgCount = () => $('#msg-count').textContent = `${form.elements.message.value.length} / 1500`;
+        msgCount();
+
+        form.addEventListener('input', e => {
+            if (e.target.name === 'message') msgCount();
+            if (e.target.dataset.invalid) validateField(e.target);
+            const data = Object.fromEntries(fields.map(f => [f, form.elements[f].value]));
+            try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch { /* storage unavailable */ }
+        });
+
+        function validateField(input) {
+            const v = input.value.trim();
+            let err = '';
+            if (input.required && !v) err = 'This field is required.';
+            else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) err = 'Please enter a valid email address.';
+            else if (input.name === 'name' && v.length < 2) err = 'Please enter your full name.';
+            else if (input.name === 'message' && v.length < 10) err = 'Please write at least 10 characters.';
+
+            const errEl = input.parentElement.querySelector('.field-error');
+            errEl.textContent = err;
+            errEl.classList.toggle('hidden', !err);
+            input.classList.toggle('ring-rose-400', !!err);
+            input.classList.toggle('ring-slate-200', !err);
+            input.setAttribute('aria-invalid', !!err);
+            if (err) input.dataset.invalid = '1'; else delete input.dataset.invalid;
+            return !err;
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const inputs = ['name', 'email', 'institution', 'message'].map(n => form.elements[n]);
+            const results = inputs.map(validateField);
+            const firstBad = inputs[results.indexOf(false)];
+            if (firstBad) { firstBad.focus(); toast('Please fix the highlighted fields', 'fa-circle-exclamation text-amber-400'); return; }
+
+            const d = Object.fromEntries(fields.map(f => [f, form.elements[f].value.trim()]));
+            const subject = `ATAL FDP Enquiry: ${d.name} (${d.institution})`;
+            const body = [
+                'Dear Dr. P. Bhagath,', '',
+                d.message, '',
+                '---',
+                `Name: ${d.name}`,
+                `Email: ${d.email}`,
+                `Institution: ${d.institution}`,
+                `Role: ${d.role}`,
+                `Programme: ATAL FDP: ${FDP_TITLE} (14–19 Dec 2026)`,
+            ].join('\n');
+
+            window.location.href = `mailto:bhagath@lbrce.ac.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+            form.reset(); msgCount();
+            toast('Opening your email app with the enquiry…', 'fa-paper-plane text-brand-300');
+        });
+
+        /* ==========================================================
+           MISC
+           ========================================================== */
+        $('#year').textContent = new Date().getFullYear();
+    })();
+    </script>
+</body>
+</html>
