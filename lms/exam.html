@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICTE ATAL FDP 2026 | Online Assessment Portal</title>
+    <meta name="description" content="Official 60-minute online examination portal for the AICTE ATAL Faculty Development Programme on AI-Driven Materials Intelligence and Autonomous Systems.">
+    <link rel="icon" type="image/png" href="../assets/aicte-logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .unselectable { -webkit-user-select: none; user-select: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- ================= TOP HEADER BAR ================= -->
+    <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="../assets/aicte-logo.png" alt="AICTE logo" class="w-10 h-10 rounded-full bg-white p-0.5 shadow-sm border border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-slate-900 text-sm tracking-tight">AICTE ATAL FDP 2026</span>
+                            <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-50 text-brand-700 border border-brand-200">Official Assessment</span>
+                        </div>
+                        <span class="block text-[11px] font-medium text-slate-500 truncate max-w-xs sm:max-w-md">Dept. of AI&amp;DS · LBRCE Mylavaram</span>
+                    </div>
+                </div>
+
+                <!-- Right Header Info -->
+                <div class="flex items-center gap-3">
+                    <!-- Proctoring Warning Badge (Visible during active exam) -->
+                    <div id="proctor-badge" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 animate-pulse">
+                        <i class="fa-solid fa-shield-halved text-amber-600"></i>
+                        <span>Proctored Session</span>
+                        <span id="tab-switch-count-badge" class="ml-1 px-1.5 py-0.2 rounded bg-amber-200 text-amber-900 text-[10px] font-mono">0 alerts</span>
+                    </div>
+
+                    <!-- Timer Pill (Visible during active exam) -->
+                    <div id="exam-timer-pill" class="hidden items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-sm font-black bg-slate-900 text-white shadow-sm">
+                        <i class="fa-regular fa-clock text-brand-400"></i>
+                        <span id="timer-display">60:00</span>
+                    </div>
+
+                    <a href="../index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-brand-700 hover:bg-slate-100 transition border border-slate-200">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span class="hidden sm:inline">Back to Portal</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Proctoring Alert Toast Banner -->
+    <div id="tab-switch-alert" class="hidden fixed top-20 inset-x-4 max-w-xl mx-auto z-50 p-4 rounded-2xl bg-rose-600 text-white shadow-2xl border-2 border-rose-400 flex items-start gap-3 animate-bounce">
+        <i class="fa-solid fa-triangle-exclamation text-2xl shrink-0 mt-0.5 text-white"></i>
+        <div class="flex-1 text-xs">
+            <h4 class="font-black text-sm">Security Violation Warning: Tab Switch Detected!</h4>
+            <p class="mt-1 text-rose-100 leading-relaxed">
+                You have navigated away from the exam window. This event has been logged in your assessment submission record. Repeated switching may invalidate your AICTE ATAL certificate eligibility.
+            </p>
+        </div>
+        <button type="button" onclick="document.getElementById('tab-switch-alert').classList.add('hidden')" class="p-1 text-white hover:text-rose-200">
+            <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+    </div>
+
+    <!-- ================= MAIN BODY CONTAINER ================= -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ================= STAGE 1: CANDIDATE REGISTRATION & INSTRUCTIONS GATE ================= -->
+        <section id="stage-verification" class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+                <!-- Banner -->
+                <div class="bg-gradient-to-r from-brand-700 via-brand-800 to-slate-900 p-6 sm:p-8 text-white relative">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-brand-200 border border-white/20 mb-3">
+                        <i class="fa-solid fa-file-signature text-xs"></i> Day 6 Valedictory Assessment
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-tight">AICTE ATAL Online Examination</h1>
+                    <p class="mt-2 text-sm text-brand-100 leading-relaxed">
+                        Programme: <strong>AI-Driven Materials Intelligence and Autonomous Systems</strong>
+                    </p>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <!-- Rules Notice -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-2">
+                        <h4 class="font-bold text-slate-900 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-circle-info text-brand-600"></i> Instructions &amp; Passing Criteria
+                        </h4>
+                        <ul class="list-disc list-inside space-y-1 pl-1">
+                            <li><strong>Duration:</strong> Exactly 60 minutes. The test will auto-submit when the timer expires.</li>
+                            <li><strong>Format:</strong> 20 Multiple Choice Questions covering all 6 days of lectures and labs.</li>
+                            <li><strong>Passing Benchmark:</strong> Minimum <strong>60% marks</strong> (12 / 20) required as per official AICTE ATAL certification norms.</li>
+                            <li><strong>Anti-Cheating Tracking:</strong> Window blurring, full-screen exits, and tab switches are automatically monitored and logged.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Candidate Verification Form -->
+                    <form id="candidate-entry-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Full Name (as per ATAL registration) <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" id="candidate-name" required placeholder="e.g. Dr. Ramesh Kumar"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Registered Email Address <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="email" id="candidate-email" required placeholder="e.g. ramesh.kumar@college.edu.in"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <p class="mt-1 text-[11px] text-slate-500">Must match the email used on the AICTE ATAL portal for attendance cross-referencing.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                    Institution / University <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="text" id="candidate-institution" required placeholder="e.g. LBRCE / IIT Guwahati"
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                    AICTE Application / Roll No.
+                                </label>
+                                <input type="text" id="candidate-app-no" placeholder="Optional"
+                                       class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            </div>
+                        </div>
+
+                        <!-- Agreement Checkbox -->
+                        <div class="pt-2">
+                            <label class="flex items-start gap-2.5 text-xs text-slate-600 cursor-pointer">
+                                <input type="checkbox" id="terms-agree" required class="mt-0.5 rounded text-brand-600 focus:ring-brand-500">
+                                <span>I confirm that I am attending the ATAL FDP and agree to abide by the academic integrity code. I understand that tab switching and window changes will be recorded.</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" id="start-exam-btn"
+                                class="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-600/30 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Start 60-Minute Examination
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= STAGE 2: LIVE EXAMINATION VIEW ================= -->
+        <section id="stage-exam" class="hidden space-y-6">
+            <!-- Candidate Sub-header -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-200 text-brand-700 font-bold grid place-items-center text-sm">
+                        <span id="active-candidate-initials">RK</span>
+                    </div>
+                    <div>
+                        <h3 id="active-candidate-name" class="font-bold text-slate-900 text-sm leading-tight">Candidate Name</h3>
+                        <p id="active-candidate-meta" class="text-xs text-slate-500">candidate@email.com · LBRCE</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button type="button" id="fullscreen-toggle-btn"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                        <i class="fa-solid fa-expand"></i> Full Screen
+                    </button>
+                    <button type="button" id="submit-exam-early-btn"
+                            class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition">
+                        <i class="fa-solid fa-check-double"></i> Submit Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Two-Column Layout: Question Area (Left) + Question Palette (Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- Left Column: Current Question Card -->
+                <div class="lg:col-span-8 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6 unselectable">
+                    
+                    <!-- Question Header & Category -->
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <div>
+                            <span id="q-category-tag" class="px-3 py-1 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                Module 1: Foundations
+                            </span>
+                            <h2 class="mt-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                                Question <span id="q-current-number" class="text-slate-900 font-mono text-sm">1</span> of <span id="q-total-number" class="font-mono">20</span>
+                            </h2>
+                        </div>
+
+                        <!-- Flag for review button -->
+                        <button type="button" id="flag-review-btn"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <i class="fa-regular fa-bookmark"></i> <span>Mark for Review</span>
+                        </button>
+                    </div>
+
+                    <!-- Question Text -->
+                    <div class="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed" id="q-question-text">
+                        Loading question…
+                    </div>
+
+                    <!-- 4 Multiple Choice Options -->
+                    <div class="space-y-3 pt-2" id="q-options-container">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Navigation Action Buttons -->
+                    <div class="flex items-center justify-between pt-6 border-t border-slate-100">
+                        <button type="button" id="prev-q-btn"
+                                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                            <i class="fa-solid fa-arrow-left"></i> Previous
+                        </button>
+
+                        <button type="button" id="clear-q-btn"
+                                class="text-xs font-semibold text-slate-400 hover:text-slate-600 transition">
+                            Clear Response
+                        </button>
+
+                        <button type="button" id="next-q-btn"
+                                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-600/30 transition">
+                            <span>Next Question</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Question Palette & Proctoring Status -->
+                <div class="lg:col-span-4 space-y-6">
+
+                    <!-- Question Status Palette -->
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                        <h4 class="font-bold text-slate-900 text-sm flex items-center justify-between">
+                            <span>Question Palette</span>
+                            <span class="text-xs font-mono text-slate-400"><span id="palette-answered-count">0</span>/20 Done</span>
+                        </h4>
+
+                        <!-- Legend -->
+                        <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 border-y border-slate-100 py-3">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-emerald-500 shrink-0"></span>
+                                <span>Answered (<strong id="legend-ans-cnt">0</strong>)</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-amber-400 shrink-0"></span>
+                                <span>For Review (<strong id="legend-rev-cnt">0</strong>)</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-slate-200 shrink-0"></span>
+                                <span>Unvisited (<strong id="legend-unv-cnt">20</strong>)</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-violet-500 shrink-0"></span>
+                                <span>Answered &amp; Review</span>
+                            </div>
+                        </div>
+
+                        <!-- 20 Question Buttons Grid -->
+                        <div class="grid grid-cols-5 gap-2 max-h-64 overflow-y-auto custom-scrollbar p-1" id="question-palette-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Live Proctoring Box -->
+                    <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-brand-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> Proctoring Monitor
+                            </span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Continuous client monitoring is active. Exiting full-screen or switching applications triggers an automatic violation log.
+                        </p>
+                        <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Tab Switch Violations:</span>
+                            <span id="tab-switch-count-display" class="font-mono font-bold text-emerald-400">0 (Clean)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ================= STAGE 3: RESULT & PROVISIONAL SCORECARD ================= -->
+        <section id="stage-result" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+                
+                <!-- Status Banner -->
+                <div id="result-header-banner" class="p-8 text-white text-center space-y-2">
+                    <!-- Populated by JS (Green if >=60%, Amber if <60%) -->
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <!-- Key Score Metrics Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                            <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Total Score</span>
+                            <div class="mt-1 text-3xl font-black text-slate-900 font-mono">
+                                <span id="res-score-marks">0</span> <span class="text-sm text-slate-400 font-normal">/ 20</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                            <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Percentage</span>
+                            <div class="mt-1 text-3xl font-black font-mono" id="res-score-pct-container">
+                                <span id="res-score-pct">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                            <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">AICTE ATAL Status</span>
+                            <div class="mt-1" id="res-status-badge-container">
+                                <!-- Pass/Fail Badge -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Domain Breakdown -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-slate-900 text-sm">Domain-Wise Performance Breakdown</h4>
+                        <div class="space-y-2 text-xs" id="domain-breakdown-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Proctoring & Submission Verification Block -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-2 font-mono">
+                        <div class="flex justify-between">
+                            <span>Candidate:</span>
+                            <strong class="text-slate-800" id="res-candidate-name">Dr. Candidate</strong>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Email:</span>
+                            <span class="text-slate-800" id="res-candidate-email">candidate@email.com</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Institution:</span>
+                            <span class="text-slate-800" id="res-candidate-inst">LBRCE</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Proctoring Alert Count:</span>
+                            <span id="res-tab-switches" class="text-slate-800">0 violations</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Submission Timestamp:</span>
+                            <span id="res-timestamp" class="text-slate-800">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                        <button type="button" onclick="window.print()"
+                                class="w-full sm:flex-1 py-3 px-4 rounded-xl font-bold text-xs bg-slate-900 hover:bg-slate-800 text-white transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-print"></i> Print / Save Scorecard PDF
+                        </button>
+
+                        <a href="../admin/exam-analytics.html"
+                           class="w-full sm:flex-1 py-3 px-4 rounded-xl font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center justify-center gap-2 border border-slate-200">
+                            <i class="fa-solid fa-chart-column text-brand-600"></i> Coordinator Gradebook
+                        </a>
+
+                        <a href="../index.html"
+                           class="w-full sm:flex-1 py-3 px-4 rounded-xl font-bold text-xs bg-brand-600 hover:bg-brand-500 text-white transition flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-house"></i> Public Portal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Confirmation Modal before Early Submit -->
+    <div id="submit-confirm-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 grid place-items-center text-xl">
+                <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-900">Submit Examination?</h3>
+                <p class="text-xs text-slate-500 mt-1" id="submit-modal-summary">
+                    You have answered 15 of 20 questions.
+                </p>
+            </div>
+            <div class="flex gap-2.5 pt-2">
+                <button type="button" id="modal-cancel-btn" class="flex-1 py-2.5 rounded-xl font-semibold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                    Keep Reviewing
+                </button>
+                <button type="button" id="modal-confirm-btn" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-brand-600 hover:bg-brand-500 text-white transition shadow-md">
+                    Yes, Final Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT EXAM ENGINE ================= -->
+    <script>
+    (() => {
+        'use strict';
+
+        // ================= QUESTION BANK (20 CURRICULUM QUESTIONS) =================
+        // Covers: Foundations of AI, Explainable AI (XAI), Materials Informatics, GNNs, Autonomous UAVs
+        const QUESTIONS = [
+            // Module 1: AI & Machine Learning Foundations
+            {
+                id: 1,
+                module: 'AI & Machine Learning Foundations',
+                question: 'In standard supervised machine learning, which technique is most effective at preventing model overfitting on high-dimensional tabular data?',
+                options: [
+                    'Increasing polynomial degree without regularization',
+                    'L1 (Lasso) and L2 (Ridge) weight regularization with cross-validation',
+                    'Removing validation and testing splits',
+                    'Minimizing training sample diversity'
+                ],
+                correct: 1
+            },
+            {
+                id: 2,
+                module: 'AI & Machine Learning Foundations',
+                question: 'Which metric is best suited for evaluating an imbalanced classification model where false negatives carry critical penalty?',
+                options: [
+                    'Raw accuracy',
+                    'Recall (Sensitivity)',
+                    'Mean Absolute Error (MAE)',
+                    'Root Mean Squared Log Error (RMSLE)'
+                ],
+                correct: 1
+            },
+            {
+                id: 3,
+                module: 'AI & Machine Learning Foundations',
+                question: 'What is the primary objective of Batch Normalization in deep neural network training?',
+                options: [
+                    'Stabilize internal covariate shift and accelerate gradient convergence',
+                    'Increase parameter count for higher model capacity',
+                    'Convert continuous features into discrete categorical bins',
+                    'Enforce deterministic weights during test time'
+                ],
+                correct: 0
+            },
+            {
+                id: 4,
+                module: 'AI & Machine Learning Foundations',
+                question: 'Which optimization algorithm adapts learning rates per-parameter based on first and second moments of the gradients?',
+                options: [
+                    'Standard Batch Gradient Descent',
+                    'Stochastic Gradient Descent (without momentum)',
+                    'Adam (Adaptive Moment Estimation)',
+                    'Genetic Algorithm Hill Climbing'
+                ],
+                correct: 2
+            },
+
+            // Module 2: Explainable AI (XAI) & Trustworthy Systems
+            {
+                id: 5,
+                module: 'Explainable AI (XAI)',
+                question: 'In Explainable AI (XAI), what mathematical concept forms the theoretical basis for SHAP (SHapley Additive exPlanations) values?',
+                options: [
+                    'Laplace transforms',
+                    'Cooperative Game Theory Shapley values',
+                    'Newton-Raphson approximation',
+                    'Markov Chain Monte Carlo sampling'
+                ],
+                correct: 1
+            },
+            {
+                id: 6,
+                module: 'Explainable AI (XAI)',
+                question: 'How does LIME (Local Interpretable Model-agnostic Explanations) construct local fidelity for black-box predictions?',
+                options: [
+                    'It trains a global linear model across the entire dataset',
+                    'It perturbs the input instance and fits a sparse surrogate model weighted by distance',
+                    'It decompiles the deep network weights into assembly code',
+                    'It calculates exact analytical second derivatives of the loss function'
+                ],
+                correct: 1
+            },
+            {
+                id: 7,
+                module: 'Explainable AI (XAI)',
+                question: 'What distinguishes global interpretability from local interpretability in explainable machine learning?',
+                options: [
+                    'Global explains overall feature importance across the entire dataset; local explains individual predictions',
+                    'Global only applies to decision trees; local only applies to neural networks',
+                    'Local models require cloud computing; global runs offline',
+                    'There is no mathematical difference between them'
+                ],
+                correct: 0
+            },
+            {
+                id: 8,
+                module: 'Explainable AI (XAI)',
+                question: 'Which criterion is fundamental for trustworthy AI systems deployed in safety-critical engineering domains?',
+                options: [
+                    'Complete opacity of model decision boundaries',
+                    'Accountability, robustness against adversarial perturbations, and transparent error bounds',
+                    'Maximizing parameter count regardless of inference latency',
+                    'Eliminating all human-in-the-loop oversight'
+                ],
+                correct: 1
+            },
+
+            // Module 3: Materials Informatics & Accelerated Discovery
+            {
+                id: 9,
+                module: 'Materials Informatics',
+                question: 'In Materials Informatics, what role do compositional descriptors (e.g., Magpie, Matminer) serve in property prediction pipelines?',
+                options: [
+                    'They convert elemental compositions into numeric vectors representing physical, electronic, and chemical attributes',
+                    'They replace physical laboratory synthesis machines completely',
+                    'They simulate mechanical CNC machining workflows',
+                    'They enforce optical microscopy calibration'
+                ],
+                correct: 0
+            },
+            {
+                id: 10,
+                module: 'Materials Informatics',
+                question: 'Which computational physics method is frequently used to generate high-fidelity ground-truth training datasets for materials ML surrogate models?',
+                options: [
+                    'Density Functional Theory (DFT)',
+                    'Basic finite impulse response filtering',
+                    'Simple linear regression',
+                    'Breadth-First Search (BFS)'
+                ],
+                correct: 0
+            },
+            {
+                id: 11,
+                module: 'Materials Informatics',
+                question: 'Why are High-Entropy Alloys (HEAs) considered a prime candidate for machine-learning-accelerated exploration?',
+                options: [
+                    'Because they contain only a single pure metallic element',
+                    'Due to their vast compositional multi-element phase space that is intractable to screen exhaustively by trial-and-error',
+                    'Because HEAs cannot withstand high temperatures or corrosion',
+                    'Because ML models cannot process multi-element formulations'
+                ],
+                correct: 1
+            },
+            {
+                id: 12,
+                module: 'Materials Informatics',
+                question: 'What is the primary objective of active learning in experimental materials discovery campaigns?',
+                options: [
+                    'Randomly selecting chemical compounds without ranking',
+                    'Iteratively selecting high-uncertainty candidate materials to synthesize next, maximizing model improvement with minimal experiments',
+                    'Discarding all previously collected measurement data',
+                    'Training only unsupervised clustering models'
+                ],
+                correct: 1
+            },
+
+            // Module 4: Graph Neural Networks (GNNs) for Materials
+            {
+                id: 13,
+                module: 'Graph Neural Networks in Materials',
+                question: 'How are crystalline materials typically mapped onto graph structures for processing by Graph Neural Networks (e.g., CGCNN)?',
+                options: [
+                    'Atoms are represented as nodes, and chemical bonds or interatomic distances are represented as edges',
+                    'Pixels of the crystal image are flattened into a 1D vector',
+                    'The entire periodic table is compressed into a scalar value',
+                    'Only the surface packaging box dimensions are recorded'
+                ],
+                correct: 0
+            },
+            {
+                id: 14,
+                module: 'Graph Neural Networks in Materials',
+                question: 'What mathematical property must a Graph Neural Network satisfy when predicting physical properties of a crystal under 3D spatial rotation and translation?',
+                options: [
+                    'SE(3) or E(3) Invariance / Equivariance',
+                    'Arbitrary non-invertibility',
+                    'High variance across coordinate system changes',
+                    'Dependence on arbitrary XYZ axis alignment'
+                ],
+                correct: 0
+            },
+            {
+                id: 15,
+                module: 'Graph Neural Networks in Materials',
+                question: 'What is the core operation in graph message passing during crystal property evaluation?',
+                options: [
+                    'Each node updates its hidden representation by aggregating feature messages from its spatial neighbor nodes and edges',
+                    'Deleting all connected edges to isolate single atoms',
+                    'Applying 2D spatial convolution across raster images',
+                    'Computing scalar dot products of audio signals'
+                ],
+                correct: 0
+            },
+            {
+                id: 16,
+                module: 'Graph Neural Networks in Materials',
+                question: 'What advantage do GNNs offer over manual chemical feature engineering in materials discovery?',
+                options: [
+                    'GNNs learn directly from atomic topology and 3D coordination geometry without manual ad-hoc feature design',
+                    'GNNs require zero training data',
+                    'GNNs can only predict binary 0 or 1 outputs',
+                    'GNNs do not use tensor multiplications'
+                ],
+                correct: 0
+            },
+
+            // Module 5 & 6: Autonomous Drones & Vision Systems
+            {
+                id: 17,
+                module: 'Autonomous Drone Systems',
+                question: 'Which sensor modality enables autonomous UAVs to construct dense, real-time 3D spatial point clouds in GPS-denied environments?',
+                options: [
+                    'LiDAR (Light Detection and Ranging) integrated with Visual-Inertial Odometry (VIO)',
+                    'Standard uncalibrated AM radio receivers',
+                    'Low-precision barometric altimeters alone',
+                    'Basic magnetic compasses without gyro fusion'
+                ],
+                correct: 0
+            },
+            {
+                id: 18,
+                module: 'Autonomous Drone Systems',
+                question: 'In deep learning for drone vision, what is the key benefit of Single-Shot Detectors (e.g., YOLO) over two-stage detectors (e.g., Faster R-CNN)?',
+                options: [
+                    'High inference speed enabling real-time edge processing on onboard flight computers',
+                    'Infinite parameter resolution',
+                    'Exclusively offline post-mission processing',
+                    'Inability to detect small objects'
+                ],
+                correct: 0
+            },
+            {
+                id: 19,
+                module: 'Autonomous Drone Systems',
+                question: 'What is the primary function of SLAM (Simultaneous Localization and Mapping) in autonomous mobile robotics?',
+                options: [
+                    'To estimate vehicle pose while concurrently building a consistent map of an unknown environment',
+                    'To regulate electric battery charging voltages',
+                    'To transmit raw radio telemetry to satellite relays',
+                    'To simulate mechanical aerodynamic wing lift'
+                ],
+                correct: 0
+            },
+            {
+                id: 20,
+                module: 'Autonomous Drone Systems',
+                question: 'Which strategy is commonly employed in decentralized multi-agent drone swarms for collision-free trajectory tracking?',
+                options: [
+                    'Artificial Potential Fields (APF) or Model Predictive Control (MPC) with inter-agent consensus',
+                    'Assigning completely identical velocity vectors to all drones simultaneously',
+                    'Eliminating all inter-agent communication and proximity sensing',
+                    'Switching off motor controllers during mission execution'
+                ],
+                correct: 0
+            }
+        ];
+
+        // ================= STATE =================
+        let candidate = {
+            name: '',
+            email: '',
+            institution: '',
+            appNo: ''
+        };
+
+        let currentQuestionIndex = 0;
+        let candidateAnswers = new Array(QUESTIONS.length).fill(null);
+        let flaggedForReview = new Array(QUESTIONS.length).fill(false);
+        let visitedQuestions = new Array(QUESTIONS.length).fill(false);
+
+        let examDurationSeconds = 60 * 60; // 60 minutes
+        let timerInterval = null;
+        let tabSwitchViolations = 0;
+        let isExamActive = false;
+        let submissionCompleted = false;
+
+        // Elements
+        const stageVerification = document.getElementById('stage-verification');
+        const stageExam = document.getElementById('stage-exam');
+        const stageResult = document.getElementById('stage-result');
+        const proctorBadge = document.getElementById('proctor-badge');
+        const examTimerPill = document.getElementById('exam-timer-pill');
+        const timerDisplay = document.getElementById('timer-display');
+        const tabSwitchAlert = document.getElementById('tab-switch-alert');
+        const tabSwitchCountBadge = document.getElementById('tab-switch-count-badge');
+        const tabSwitchCountDisplay = document.getElementById('tab-switch-count-display');
+
+        // ================= STAGE 1: ENTRY VERIFICATION =================
+        document.getElementById('candidate-entry-form').addEventListener('submit', e => {
+            e.preventDefault();
+            candidate.name = document.getElementById('candidate-name').value.trim();
+            candidate.email = document.getElementById('candidate-email').value.trim().toLowerCase();
+            candidate.institution = document.getElementById('candidate-institution').value.trim();
+            candidate.appNo = document.getElementById('candidate-app-no').value.trim();
+
+            if (!candidate.name || !candidate.email) return;
+
+            // Start Exam
+            startExam();
+        });
+
+        function startExam() {
+            isExamActive = true;
+            visitedQuestions[0] = true;
+
+            // Setup Header & UI
+            stageVerification.classList.add('hidden');
+            stageExam.classList.remove('hidden');
+            proctorBadge.classList.remove('hidden');
+            proctorBadge.classList.add('flex');
+            examTimerPill.classList.remove('hidden');
+            examTimerPill.classList.add('flex');
+
+            document.getElementById('active-candidate-name').textContent = candidate.name;
+            document.getElementById('active-candidate-meta').textContent = `${candidate.email} · ${candidate.institution}`;
+            document.getElementById('active-candidate-initials').textContent = candidate.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+            // Render Palette and first question
+            renderPalette();
+            renderQuestion(0);
+
+            // Start 60m Countdown
+            startTimer();
+
+            // Try requesting fullscreen
+            try {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+            } catch (err) {}
+        }
+
+        // ================= TIMER =================
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                examDurationSeconds--;
+                updateTimerDisplay();
+
+                if (examDurationSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitExam('Time has expired! Your exam was automatically submitted.');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(examDurationSeconds / 60);
+            const secs = examDurationSeconds % 60;
+            const str = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            timerDisplay.textContent = str;
+
+            if (examDurationSeconds <= 120) {
+                examTimerPill.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-sm font-black bg-rose-600 text-white animate-pulse shadow-sm';
+            } else if (examDurationSeconds <= 600) {
+                examTimerPill.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-sm font-black bg-amber-600 text-white shadow-sm';
+            }
+        }
+
+        // ================= PROCTORING & TAB-SWITCH MONITOR =================
+        function handleVisibilityChange() {
+            if (!isExamActive || submissionCompleted) return;
+
+            if (document.hidden) {
+                tabSwitchViolations++;
+                tabSwitchCountBadge.textContent = `${tabSwitchViolations} alert${tabSwitchViolations > 1 ? 's' : ''}`;
+                tabSwitchCountDisplay.textContent = `${tabSwitchViolations} (Flagged)`;
+                tabSwitchCountDisplay.className = 'font-mono font-bold text-rose-400';
+
+                // Display Alert
+                tabSwitchAlert.classList.remove('hidden');
+                setTimeout(() => {
+                    tabSwitchAlert.classList.add('hidden');
+                }, 8000);
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('blur', () => {
+            if (isExamActive && !submissionCompleted && !document.hidden) {
+                handleVisibilityChange();
+            }
+        });
+
+        // Fullscreen Toggle
+        document.getElementById('fullscreen-toggle-btn').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            }
+        });
+
+        // ================= RENDER QUESTION & PALETTE =================
+        function renderQuestion(index) {
+            currentQuestionIndex = index;
+            visitedQuestions[index] = true;
+            const q = QUESTIONS[index];
+
+            document.getElementById('q-current-number').textContent = index + 1;
+            document.getElementById('q-total-number').textContent = QUESTIONS.length;
+            document.getElementById('q-category-tag').textContent = q.module;
+            document.getElementById('q-question-text').textContent = q.question;
+
+            // Flag state
+            const isFlagged = flaggedForReview[index];
+            const flagBtn = document.getElementById('flag-review-btn');
+            if (isFlagged) {
+                flagBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition bg-amber-100 text-amber-800 border-amber-300';
+                flagBtn.innerHTML = '<i class="fa-solid fa-bookmark"></i> <span>Marked for Review</span>';
+            } else {
+                flagBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition border-slate-200 text-slate-600 hover:bg-slate-50';
+                flagBtn.innerHTML = '<i class="fa-regular fa-bookmark"></i> <span>Mark for Review</span>';
+            }
+
+            // Options
+            const container = document.getElementById('q-options-container');
+            container.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((optText, optIndex) => {
+                const isSelected = candidateAnswers[index] === optIndex;
+                const optDiv = document.createElement('div');
+                optDiv.className = `p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 ${isSelected ? 'border-brand-600 bg-brand-50/70 shadow-sm ring-1 ring-brand-500' : 'border-slate-200 hover:border-brand-300 hover:bg-slate-50'}`;
+
+                optDiv.innerHTML = `
+                    <div class="w-6 h-6 shrink-0 rounded-full border flex items-center justify-center font-bold text-xs mt-0.5 ${isSelected ? 'border-brand-600 bg-brand-600 text-white' : 'border-slate-300 text-slate-500'}">
+                        ${letters[optIndex]}
+                    </div>
+                    <span class="text-sm font-medium ${isSelected ? 'text-brand-900 font-bold' : 'text-slate-700'}">${optText}</span>
+                `;
+
+                optDiv.addEventListener('click', () => {
+                    candidateAnswers[index] = optIndex;
+                    renderQuestion(index);
+                    renderPalette();
+                });
+
+                container.appendChild(optDiv);
+            });
+
+            // Previous button disable check
+            document.getElementById('prev-q-btn').disabled = (index === 0);
+            document.getElementById('prev-q-btn').classList.toggle('opacity-50', index === 0);
+            document.getElementById('prev-q-btn').classList.toggle('cursor-not-allowed', index === 0);
+
+            // Next button text
+            const nextBtn = document.getElementById('next-q-btn');
+            if (index === QUESTIONS.length - 1) {
+                nextBtn.innerHTML = '<span>Review & Submit</span> <i class="fa-solid fa-check"></i>';
+            } else {
+                nextBtn.innerHTML = '<span>Next Question</span> <i class="fa-solid fa-arrow-right"></i>';
+            }
+
+            renderPalette();
+        }
+
+        // Navigation Handlers
+        document.getElementById('prev-q-btn').addEventListener('click', () => {
+            if (currentQuestionIndex > 0) renderQuestion(currentQuestionIndex - 1);
+        });
+
+        document.getElementById('next-q-btn').addEventListener('click', () => {
+            if (currentQuestionIndex < QUESTIONS.length - 1) {
+                renderQuestion(currentQuestionIndex + 1);
+            } else {
+                showSubmitConfirmModal();
+            }
+        });
+
+        document.getElementById('clear-q-btn').addEventListener('click', () => {
+            candidateAnswers[currentQuestionIndex] = null;
+            renderQuestion(currentQuestionIndex);
+            renderPalette();
+        });
+
+        document.getElementById('flag-review-btn').addEventListener('click', () => {
+            flaggedForReview[currentQuestionIndex] = !flaggedForReview[currentQuestionIndex];
+            renderQuestion(currentQuestionIndex);
+            renderPalette();
+        });
+
+        // Question Palette
+        function renderPalette() {
+            const grid = document.getElementById('question-palette-grid');
+            grid.innerHTML = '';
+
+            let answeredCount = 0;
+            let reviewCount = 0;
+            let unvisitedCount = 0;
+
+            QUESTIONS.forEach((q, idx) => {
+                const isAns = candidateAnswers[idx] !== null;
+                const isRev = flaggedForReview[idx];
+                const isVis = visitedQuestions[idx];
+                const isCurr = idx === currentQuestionIndex;
+
+                if (isAns) answeredCount++;
+                if (isRev) reviewCount++;
+                if (!isVis && !isAns) unvisitedCount++;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+
+                let bgClass = 'bg-slate-100 text-slate-600 border border-slate-200';
+                if (isAns && isRev) {
+                    bgClass = 'bg-violet-600 text-white font-bold border-violet-700 shadow-sm';
+                } else if (isAns) {
+                    bgClass = 'bg-emerald-500 text-white font-bold border-emerald-600 shadow-sm';
+                } else if (isRev) {
+                    bgClass = 'bg-amber-400 text-amber-950 font-bold border-amber-500 shadow-sm';
+                } else if (isVis) {
+                    bgClass = 'bg-slate-200 text-slate-800 border-slate-300 font-semibold';
+                }
+
+                if (isCurr) {
+                    bgClass += ' ring-2 ring-brand-500 ring-offset-2 scale-105';
+                }
+
+                btn.className = `w-10 h-10 rounded-xl text-xs transition flex items-center justify-center font-mono ${bgClass}`;
+                btn.textContent = idx + 1;
+
+                btn.addEventListener('click', () => {
+                    renderQuestion(idx);
+                });
+
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('palette-answered-count').textContent = answeredCount;
+            document.getElementById('legend-ans-cnt').textContent = answeredCount;
+            document.getElementById('legend-rev-cnt').textContent = reviewCount;
+            document.getElementById('legend-unv-cnt').textContent = QUESTIONS.length - answeredCount;
+        }
+
+        // ================= SUBMIT MODAL & EVALUATION =================
+        function showSubmitConfirmModal() {
+            const answered = candidateAnswers.filter(a => a !== null).length;
+            const unanswered = QUESTIONS.length - answered;
+            document.getElementById('submit-modal-summary').innerHTML = `
+                You have answered <strong>${answered}</strong> of <strong>${QUESTIONS.length}</strong> questions.<br>
+                ${unanswered > 0 ? `<span class="text-amber-600 font-semibold">⚠️ ${unanswered} question(s) remain unanswered.</span>` : '<span class="text-emerald-600 font-semibold">✓ All questions answered!</span>'}
+            `;
+            document.getElementById('submit-confirm-modal').classList.remove('hidden');
+        }
+
+        document.getElementById('submit-exam-early-btn').addEventListener('click', showSubmitConfirmModal);
+        document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+            document.getElementById('submit-confirm-modal').classList.add('hidden');
+        });
+
+        document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+            document.getElementById('submit-confirm-modal').classList.add('hidden');
+            finalizeSubmission();
+        });
+
+        function autoSubmitExam(reason) {
+            alert(reason);
+            finalizeSubmission();
+        }
+
+        // Finalize Evaluation & Save
+        function finalizeSubmission() {
+            submissionCompleted = true;
+            isExamActive = false;
+            clearInterval(timerInterval);
+
+            // Compute Marks
+            let score = 0;
+            const moduleBreakdown = {};
+
+            QUESTIONS.forEach((q, idx) => {
+                const userChoice = candidateAnswers[idx];
+                const isCorrect = (userChoice === q.correct);
+                if (isCorrect) score++;
+
+                moduleBreakdown[q.module] = moduleBreakdown[q.module] || { correct: 0, total: 0 };
+                moduleBreakdown[q.module].total++;
+                if (isCorrect) moduleBreakdown[q.module].correct++;
+            });
+
+            const totalQuestions = QUESTIONS.length;
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const isPassed = percentage >= 60; // AICTE ATAL 60% Benchmark
+            const timeTakenMins = Math.max(1, Math.round((3600 - examDurationSeconds) / 60));
+            const submissionDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+            const submissionRecord = {
+                id: 'ATAL-' + Date.now().toString(36).toUpperCase(),
+                name: candidate.name,
+                email: candidate.email,
+                institution: candidate.institution,
+                appNo: candidate.appNo,
+                score: score,
+                total: totalQuestions,
+                percentage: percentage,
+                passed: isPassed,
+                violations: tabSwitchViolations,
+                timeTakenMinutes: timeTakenMins,
+                submittedAt: submissionDate
+            };
+
+            // Save to LocalStorage for Coordinator Gradebook
+            try {
+                const storedSubmissions = JSON.parse(localStorage.getItem('atal_fdp_exam_submissions') || '[]');
+                // Replace if already submitted with same email, or append
+                const existingIdx = storedSubmissions.findIndex(s => s.email.toLowerCase() === candidate.email.toLowerCase());
+                if (existingIdx >= 0) {
+                    storedSubmissions[existingIdx] = submissionRecord;
+                } else {
+                    storedSubmissions.push(submissionRecord);
+                }
+                localStorage.setItem('atal_fdp_exam_submissions', JSON.stringify(storedSubmissions));
+            } catch (err) {
+                console.warn('LocalStorage save failed:', err);
+            }
+
+            // Sync with Server API (if connected to server.js)
+            fetch('/api/exam/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(submissionRecord)
+            }).catch(() => { /* Offline / Static hosting mode */ });
+
+            // Sync with Google Sheets Webhook (if configured)
+            if (window.ATAL_GOOGLE_SHEET_WEBHOOK) {
+                fetch(window.ATAL_GOOGLE_SHEET_WEBHOOK, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(submissionRecord)
+                }).catch(() => {});
+            }
+
+            // Display Stage 3
+            stageExam.classList.add('hidden');
+            proctorBadge.classList.add('hidden');
+            examTimerPill.classList.add('hidden');
+            stageResult.classList.remove('hidden');
+
+            // Render Stage 3 Result
+            const banner = document.getElementById('result-header-banner');
+            if (isPassed) {
+                banner.className = 'p-8 bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-center space-y-2';
+                banner.innerHTML = `
+                    <div class="w-16 h-16 mx-auto rounded-full bg-white/20 grid place-items-center text-3xl shadow-md">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black">Assessment Qualified!</h2>
+                    <p class="text-emerald-100 text-xs sm:text-sm max-w-md mx-auto">
+                        Congratulations, <strong>${candidate.name}</strong>! You have successfully met the AICTE ATAL 60% examination benchmark for certificate issuance.
+                    </p>
+                `;
+            } else {
+                banner.className = 'p-8 bg-gradient-to-r from-amber-600 to-rose-700 text-white text-center space-y-2';
+                banner.innerHTML = `
+                    <div class="w-16 h-16 mx-auto rounded-full bg-white/20 grid place-items-center text-3xl shadow-md">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black">Assessment Completed</h2>
+                    <p class="text-amber-100 text-xs sm:text-sm max-w-md mx-auto">
+                        You scored <strong>${percentage}%</strong>. The AICTE ATAL certificate requires a minimum passing grade of 60%. Please contact the coordinator for guidance.
+                    </p>
+                `;
+            }
+
+            document.getElementById('res-score-marks').textContent = score;
+            document.getElementById('res-score-pct').textContent = `${percentage}%`;
+            document.getElementById('res-score-pct').className = `text-3xl font-black font-mono ${isPassed ? 'text-emerald-600' : 'text-amber-600'}`;
+
+            document.getElementById('res-status-badge-container').innerHTML = isPassed
+                ? `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300">
+                    <i class="fa-solid fa-circle-check"></i> QUALIFIED (≥ 60%)
+                   </span>`
+                : `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-300">
+                    <i class="fa-solid fa-circle-xmark"></i> NOT QUALIFIED (< 60%)
+                   </span>`;
+
+            // Domain breakdown
+            const breakdownContainer = document.getElementById('domain-breakdown-container');
+            breakdownContainer.innerHTML = '';
+            for (const [modName, stats] of Object.entries(moduleBreakdown)) {
+                const modPct = Math.round((stats.correct / stats.total) * 100);
+                const row = document.createElement('div');
+                row.className = 'p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between';
+                row.innerHTML = `
+                    <div class="flex-1 pr-3 truncate">
+                        <span class="font-semibold text-slate-800">${modName}</span>
+                        <div class="w-full bg-slate-200 rounded-full h-1.5 mt-1 overflow-hidden">
+                            <div class="${modPct >= 60 ? 'bg-emerald-500' : 'bg-amber-500'} h-1.5 rounded-full" style="width: ${modPct}%"></div>
+                        </div>
+                    </div>
+                    <span class="font-mono font-bold text-slate-700 shrink-0">${stats.correct}/${stats.total} (${modPct}%)</span>
+                `;
+                breakdownContainer.appendChild(row);
+            }
+
+            // Verification block
+            document.getElementById('res-candidate-name').textContent = candidate.name;
+            document.getElementById('res-candidate-email').textContent = candidate.email;
+            document.getElementById('res-candidate-inst').textContent = candidate.institution;
+            document.getElementById('res-tab-switches').textContent = `${tabSwitchViolations} alert(s) ${tabSwitchViolations > 2 ? '⚠️ (High)' : '✓ (Acceptable)'}`;
+            document.getElementById('res-timestamp').textContent = `${submissionDate} (${timeTakenMins} mins duration)`;
+
+            // Exit full screen
+            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        }
+
+    })();
+    </script>
+</body>
+</html>
+

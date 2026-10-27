@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATAL FDP 2026 | Coordinator Exam Gradebook & Analytics</title>
+    <meta name="description" content="Coordinator gradebook, score analytics, and CSV exporter for the AICTE ATAL Faculty Development Programme Online Examination.">
+    <link rel="icon" type="image/png" href="../assets/aicte-logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js CDN for Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.5); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.8); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- ================= TOP NAVIGATION BAR ================= -->
+    <header class="sticky top-0 z-50 border-b border-slate-800/80 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                <div class="flex items-center gap-3">
+                    <a href="../index.html" class="flex items-center gap-2.5 group">
+                        <img src="../assets/aicte-logo.png" alt="AICTE Logo" class="w-9 h-9 rounded-full bg-white p-0.5 shadow-md group-hover:scale-105 transition-transform">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-white text-sm tracking-tight">ATAL FDP 2026</span>
+                                <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-500/20 text-brand-300 border border-brand-500/30">Coordinator Portal</span>
+                            </div>
+                            <span class="block text-[11px] font-medium text-slate-400">Exam Gradebook &amp; Analytics</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <a href="final-certification.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 hover:bg-emerald-900 transition"><i class="fa-solid fa-award text-xs"></i> <span class="hidden md:inline">Final Certification</span></a>
+                    <a href="attendance.html"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
+                        <i class="fa-solid fa-users text-indigo-400"></i>
+                        <span class="hidden md:inline">Attendance Dashboard</span>
+                    </a>
+
+                    <a href="../lms/exam.html" target="_blank"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-300 bg-brand-950/60 border border-brand-800/60 hover:bg-brand-900 transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        <span class="hidden sm:inline">Exam Portal</span>
+                    </a>
+
+                    <button type="button" id="load-sample-btn"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-400"></i>
+                        <span class="hidden sm:inline">Load Sample Submissions</span>
+                        <span class="sm:hidden">Sample</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Header Hero & Notice -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
+                    <i class="fa-solid fa-certificate"></i> AICTE ATAL Passing Benchmark: Minimum 60% Marks (12 / 20)
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    Assessment Gradebook &amp; Analytics
+                </h1>
+                <p class="mt-2 text-sm text-slate-400 max-w-3xl leading-relaxed">
+                    Real-time coordinator gradebook tracking candidate examination scores, pass rates, proctoring alerts (tab switching), and finalized eligibility records for official AICTE ATAL certificate issuance.
+                </p>
+            </div>
+
+            <!-- Export Buttons -->
+            <div class="flex items-center gap-2.5 shrink-0">
+                <button type="button" id="export-csv-btn"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30 transition">
+                    <i class="fa-solid fa-file-arrow-down"></i> Export Cleaned Results CSV
+                </button>
+                <button type="button" id="clear-data-btn"
+                        class="p-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-rose-400 bg-slate-900 border border-slate-800 hover:border-rose-900 transition" title="Clear all recorded submissions">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= KPI METRIC CARDS ================= -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Total Candidates -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-700 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Submissions</span>
+                    <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-total-candidates" class="text-3xl font-black text-white font-mono">0</span>
+                    <span class="text-xs text-slate-400">candidates</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                    <i class="fa-solid fa-clock-rotate-left text-brand-400"></i> Day 6 Valedictory Assessment
+                </p>
+            </div>
+
+            <!-- Qualified Candidates -->
+            <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-sm hover:border-emerald-500/50 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Qualified (≥ 60%)</span>
+                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-award"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-qualified-count" class="text-3xl font-black text-emerald-400 font-mono">0</span>
+                    <span id="kpi-qualified-pct" class="text-sm font-bold text-emerald-300 font-mono">(0%)</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2.5 overflow-hidden">
+                    <div id="kpi-qualified-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Average Score -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-700 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Average Score</span>
+                    <span class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-calculator"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-avg-score-pct" class="text-3xl font-black text-white font-mono">0%</span>
+                    <span id="kpi-avg-score-marks" class="text-xs text-slate-400 font-mono">(0 / 20)</span>
+                </div>
+                <p id="kpi-score-range" class="mt-2 text-xs text-slate-400 truncate">
+                    Range: 0% – 0%
+                </p>
+            </div>
+
+            <!-- Proctoring Alerts -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-700 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Proctoring Flagged</span>
+                    <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-flagged-count" class="text-3xl font-black text-white font-mono">0</span>
+                    <span class="text-xs text-slate-400">with &gt;2 tab switches</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                    <i class="fa-solid fa-shield-halved text-amber-400"></i> Academic integrity monitor
+                </p>
+            </div>
+        </section>
+
+        <!-- ================= VISUAL CHARTS SECTION ================= -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Doughnut Chart: Pass vs Fail Ratio -->
+            <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Pass vs. Fail Distribution</h3>
+                        <p class="text-xs text-slate-400">ATAL certification qualification status (≥60%)</p>
+                    </div>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                        Ratio
+                    </span>
+                </div>
+                <div class="relative h-64 flex items-center justify-center">
+                    <canvas id="pass-fail-chart"></canvas>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-800 grid grid-cols-2 gap-3 text-center text-xs">
+                    <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                        <span class="block text-emerald-400 font-bold text-base" id="legend-pass-cnt">0</span>
+                        <span class="text-[11px] text-slate-400 font-medium">Passed (≥ 60%)</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                        <span class="block text-rose-400 font-bold text-base" id="legend-fail-cnt">0</span>
+                        <span class="text-[11px] text-slate-400 font-medium">Failed (&lt; 60%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart: Score Distribution Histogram -->
+            <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Score Distribution Histogram</h3>
+                        <p class="text-xs text-slate-400">Candidate counts across grade brackets</p>
+                    </div>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-300 border border-brand-500/20">
+                        <i class="fa-solid fa-chart-column mr-1"></i> Marks
+                    </span>
+                </div>
+                <div class="relative h-64">
+                    <canvas id="score-dist-chart"></canvas>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                    <span><i class="fa-solid fa-circle-info text-brand-400 mr-1"></i> Passing threshold begins at bracket 60–79%.</span>
+                    <span class="text-slate-300 font-mono">Benchmark: 12 / 20 marks</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= GRADEBOOK DATA TABLE ================= -->
+        <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-bold text-white text-lg">Candidate Submissions Master List</h3>
+                    <p class="text-xs text-slate-400">Click column headers to sort by score, percentage, or proctoring alerts</p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400">Live Browser Sync</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </div>
+            </div>
+
+            <!-- Filter and Search Toolbar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                <!-- Status Filter Tabs -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
+                    <button type="button" data-filter="all" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white">
+                        All (<span id="count-all">0</span>)
+                    </button>
+                    <button type="button" data-filter="passed" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        Passed (<span id="count-passed">0</span>)
+                    </button>
+                    <button type="button" data-filter="failed" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        Failed (<span id="count-failed">0</span>)
+                    </button>
+                    <button type="button" data-filter="flagged" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        Flagged Alerts (<span id="count-flagged">0</span>)
+                    </button>
+                </div>
+
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                    <input type="text" id="table-search" placeholder="Search candidate, email, or college…"
+                           class="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-2xl">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 select-none">
+                        <tr>
+                            <th class="py-3 px-4 w-12 text-center">#</th>
+                            <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="name">
+                                Candidate Name <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="email">
+                                Email Address <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="institution">
+                                Institution <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="score">
+                                Score / Marks <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                            <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="percentage">
+                                Percentage <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                            <th class="py-3 px-4 text-center cursor-pointer hover:text-white transition" data-sort="violations">
+                                Proctor Alerts <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-white transition" data-sort="status">
+                                AICTE Result <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="gradebook-tbody" class="divide-y divide-slate-800/60 font-medium text-slate-300">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="table-empty" class="hidden py-12 text-center text-slate-500 text-xs">
+                <i class="fa-regular fa-folder-open text-2xl mb-2 text-slate-600 block"></i>
+                No candidate submissions found. Submissions from <code>lms/exam.html</code> will appear here automatically, or click <strong>Load Sample Submissions</strong> to preview.
+            </div>
+
+            <!-- Table Footnote -->
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+                <span id="table-showing-text">Showing 0 of 0 candidates</span>
+                <span class="text-[11px] text-slate-500">Benchmark: Pass ≥ 60% · Export formatted for AICTE ATAL portal</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950/80 py-6 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>&copy; 2026 Department of AI&amp;DS, Lakireddy Bali Reddy College of Engineering (LBRCE).</p>
+            <p class="flex items-center gap-2">
+                <a href="attendance.html" class="text-brand-400 hover:text-brand-300 transition">Attendance Portal</a>
+                <span>·</span>
+                <a href="../lms/exam.html" class="text-brand-400 hover:text-brand-300 transition">Exam Portal</a>
+                <span>·</span>
+                <a href="../index.html" class="text-brand-400 hover:text-brand-300 transition">Main Website</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-8 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- ================= JAVASCRIPT GRADEBOOK ENGINE ================= -->
+    <script>
+    (() => {
+        'use strict';
+
+        let submissions = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let sortColumn = 'score';
+        let sortDirection = 'desc';
+
+        let passFailChart = null;
+        let scoreDistChart = null;
+
+        const toastEl = document.getElementById('toast');
+        let toastTimer;
+        function showToast(msg, icon = 'fa-circle-check text-emerald-400') {
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').className = `fa-solid ${icon} text-sm`;
+            toastEl.classList.remove('translate-y-8', 'opacity-0', 'pointer-events-none');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toastEl.classList.add('translate-y-8', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        function getInitials(name) {
+            if (!name) return '??';
+            const clean = name.replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.|Ms\.)\s+/i, '').trim();
+            const parts = clean.split(/\s+/).filter(Boolean);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return clean.substring(0, 2).toUpperCase();
+        }
+
+        // Load Submissions from Server API or LocalStorage
+        async function loadSubmissions() {
+            try {
+                const res = await fetch('/api/exam/results');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.submissions && data.submissions.length > 0) {
+                        submissions = data.submissions;
+                        renderGradebook();
+                        return;
+                    }
+                }
+            } catch (err) {
+                // Server API unavailable (static file mode)
+            }
+
+            try {
+                const stored = JSON.parse(localStorage.getItem('atal_fdp_exam_submissions') || '[]');
+                submissions = stored;
+            } catch (err) {
+                submissions = [];
+            }
+            renderGradebook();
+        }
+
+        // Render Dashboard
+        function renderGradebook() {
+            const total = submissions.length;
+            const passed = submissions.filter(s => s.percentage >= 60);
+            const failed = submissions.filter(s => s.percentage < 60);
+            const flagged = submissions.filter(s => (s.violations || 0) > 2);
+
+            const totalScoreSum = submissions.reduce((acc, s) => acc + s.score, 0);
+            const avgScoreMarks = total > 0 ? (totalScoreSum / total) : 0;
+            const avgScorePct = total > 0 ? Math.round((avgScoreMarks / 20) * 1000) / 10 : 0;
+            const passRate = total > 0 ? Math.round((passed.length / total) * 1000) / 10 : 0;
+
+            const minScorePct = total > 0 ? Math.min(...submissions.map(s => s.percentage)) : 0;
+            const maxScorePct = total > 0 ? Math.max(...submissions.map(s => s.percentage)) : 0;
+
+            // KPIs
+            document.getElementById('kpi-total-candidates').textContent = total;
+            document.getElementById('kpi-qualified-count').textContent = passed.length;
+            document.getElementById('kpi-qualified-pct').textContent = `(${passRate}%)`;
+            document.getElementById('kpi-qualified-bar').style.width = `${passRate}%`;
+            document.getElementById('kpi-avg-score-pct').textContent = `${avgScorePct}%`;
+            document.getElementById('kpi-avg-score-marks').textContent = `(${avgScoreMarks.toFixed(1)} / 20)`;
+            document.getElementById('kpi-score-range').textContent = total > 0 ? `Range: ${minScorePct}% – ${maxScorePct}%` : 'Range: 0% – 0%';
+            document.getElementById('kpi-flagged-count').textContent = flagged.length;
+
+            // Filter button badges
+            document.getElementById('count-all').textContent = total;
+            document.getElementById('count-passed').textContent = passed.length;
+            document.getElementById('count-failed').textContent = failed.length;
+            document.getElementById('count-flagged').textContent = flagged.length;
+
+            // Legend counts
+            document.getElementById('legend-pass-cnt').textContent = `${passed.length} (${passRate}%)`;
+            document.getElementById('legend-fail-cnt').textContent = `${failed.length} (${(100 - passRate).toFixed(1)}%)`;
+
+            renderCharts(passed.length, failed.length);
+            renderTable();
+        }
+
+        // Render Charts
+        function renderCharts(passCount, failCount) {
+            // Chart 1: Pass vs Fail Doughnut
+            const ctxDoughnut = document.getElementById('pass-fail-chart').getContext('2d');
+            if (passFailChart) passFailChart.destroy();
+
+            passFailChart = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Passed (≥60%)', 'Failed (<60%)'],
+                    datasets: [{
+                        data: [passCount, failCount],
+                        backgroundColor: ['#10b981', '#f43f5e'],
+                        borderColor: '#0f172a',
+                        borderWidth: 3,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#94a3b8',
+                                font: { family: 'Inter', size: 11, weight: '600' },
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Chart 2: Score Distribution Bar Chart
+            const b1 = submissions.filter(s => s.percentage < 40).length;
+            const b2 = submissions.filter(s => s.percentage >= 40 && s.percentage < 60).length;
+            const b3 = submissions.filter(s => s.percentage >= 60 && s.percentage < 80).length;
+            const b4 = submissions.filter(s => s.percentage >= 80).length;
+
+            const ctxBar = document.getElementById('score-dist-chart').getContext('2d');
+            if (scoreDistChart) scoreDistChart.destroy();
+
+            scoreDistChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['< 40% (0–7)', '40–59% (8–11)', '60–79% (12–15)', '80–100% (16–20)'],
+                    datasets: [{
+                        label: 'Candidates',
+                        data: [b1, b2, b3, b4],
+                        backgroundColor: ['#f43f5e', '#f59e0b', '#818cf8', '#10b981'],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 10, weight: '500' } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 10 }, stepSize: 1 },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Table
+        function renderTable() {
+            const tbody = document.getElementById('gradebook-tbody');
+            const emptyEl = document.getElementById('table-empty');
+            const showingText = document.getElementById('table-showing-text');
+
+            let filtered = submissions.filter(s => {
+                if (currentFilter === 'passed' && s.percentage < 60) return false;
+                if (currentFilter === 'failed' && s.percentage >= 60) return false;
+                if (currentFilter === 'flagged' && (s.violations || 0) <= 2) return false;
+
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    const matchName = (s.name || '').toLowerCase().includes(q);
+                    const matchEmail = (s.email || '').toLowerCase().includes(q);
+                    const matchInst = (s.institution || '').toLowerCase().includes(q);
+                    if (!matchName && !matchEmail && !matchInst) return false;
+                }
+                return true;
+            });
+
+            // Sort
+            filtered.sort((a, b) => {
+                let vA = a[sortColumn];
+                let vB = b[sortColumn];
+                if (sortColumn === 'status') { vA = a.passed ? 1 : 0; vB = b.passed ? 1 : 0; }
+
+                if (typeof vA === 'string') {
+                    return sortDirection === 'asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
+                }
+                return sortDirection === 'asc' ? ((vA ?? 0) - (vB ?? 0)) : ((vB ?? 0) - (vA ?? 0));
+            });
+
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyEl.classList.remove('hidden');
+            } else {
+                emptyEl.classList.add('hidden');
+            }
+
+            showingText.textContent = `Showing ${filtered.length} of ${submissions.length} candidates`;
+
+            filtered.forEach((s, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/40 transition border-b border-slate-800/40';
+
+                const isPass = s.percentage >= 60;
+                const statusBadge = isPass
+                    ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <i class="fa-solid fa-circle-check"></i> PASS
+                       </span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                        <i class="fa-solid fa-circle-xmark"></i> FAIL (&lt;60%)
+                       </span>`;
+
+                const vCount = s.violations || 0;
+                const violationBadge = vCount === 0
+                    ? `<span class="text-slate-500 text-[11px] font-mono">0 (Clean)</span>`
+                    : vCount <= 2
+                    ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                        <i class="fa-solid fa-triangle-exclamation"></i> ${vCount} alert${vCount > 1 ? 's' : ''}
+                       </span>`
+                    : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse">
+                        <i class="fa-solid fa-shield-halved"></i> ${vCount} (Flagged)
+                       </span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">${index + 1}</td>
+                    <td class="py-3.5 px-4">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-7 h-7 shrink-0 rounded-lg bg-gradient-to-br from-slate-800 to-slate-700 text-brand-300 text-[10px] font-bold grid place-items-center border border-slate-700">
+                                ${getInitials(s.name)}
+                            </span>
+                            <div>
+                                <span class="font-bold text-white text-xs block truncate max-w-[180px]">${esc(s.name)}</span>
+                                ${s.appNo ? `<span class="text-[10px] text-slate-500 font-mono block">App: ${esc(s.appNo)}</span>` : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="text-slate-300 font-mono text-[11px] truncate block max-w-[200px]">${esc(s.email)}</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="text-slate-400 text-xs truncate block max-w-[160px]">${esc(s.institution || 'N/A')}</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="font-bold text-white font-mono text-xs">${s.score} / ${s.total || 20}</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold font-mono text-xs ${isPass ? 'text-emerald-400' : 'text-slate-300'}">${s.percentage}%</span>
+                            <div class="w-14 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                <div class="${isPass ? 'bg-emerald-500' : 'bg-rose-500'} h-1.5 rounded-full" style="width: ${Math.min(100, s.percentage)}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-4 text-center">
+                        ${violationBadge}
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                        ${statusBadge}
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Filter tabs
+        document.querySelectorAll('.table-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentFilter = btn.dataset.filter;
+                document.querySelectorAll('.table-filter-btn').forEach(b => {
+                    if (b.dataset.filter === currentFilter) {
+                        b.className = 'table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white shadow-sm';
+                    } else {
+                        b.className = 'table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700';
+                    }
+                });
+                renderTable();
+            });
+        });
+
+        // Search Input
+        document.getElementById('table-search').addEventListener('input', e => {
+            searchQuery = e.target.value.trim();
+            renderTable();
+        });
+
+        // Sort table
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.dataset.sort;
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'desc';
+                }
+                renderTable();
+            });
+        });
+
+        // Export Cleaned CSV
+        document.getElementById('export-csv-btn').addEventListener('click', () => {
+            if (submissions.length === 0) {
+                showToast('No candidate submissions to export', 'fa-triangle-exclamation text-amber-400');
+                return;
+            }
+
+            const headers = [
+                'Candidate Name',
+                'Email Address',
+                'Institution',
+                'Application / Roll No',
+                'Score (Marks)',
+                'Total Questions',
+                'Percentage (%)',
+                'AICTE ATAL Qualified (>=60%)',
+                'Proctoring Tab Violations',
+                'Time Taken (Minutes)',
+                'Submission Timestamp'
+            ];
+
+            const rows = submissions.map(s => [
+                `"${(s.name || '').replace(/"/g, '""')}"`,
+                `"${(s.email || '').replace(/"/g, '""')}"`,
+                `"${(s.institution || '').replace(/"/g, '""')}"`,
+                `"${(s.appNo || '').replace(/"/g, '""')}"`,
+                s.score,
+                s.total || 20,
+                `${s.percentage}%`,
+                s.percentage >= 60 ? 'PASS' : 'FAIL',
+                s.violations || 0,
+                s.timeTakenMinutes || 0,
+                `"${s.submittedAt || ''}"`
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const today = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `ATAL-FDP-Exam-Results-${today}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Exam results CSV downloaded successfully!');
+        });
+
+        // Clear Data
+        document.getElementById('clear-data-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all candidate exam submissions?')) {
+                localStorage.removeItem('atal_fdp_exam_submissions');
+                submissions = [];
+                renderGradebook();
+                showToast('All submissions cleared');
+            }
+        });
+
+        // ================= SAMPLE DATA GENERATOR =================
+        document.getElementById('load-sample-btn').addEventListener('click', () => {
+            const sampleSubmissions = [
+                { id: 'S1', name: 'Dr. Ramesh Kumar', email: 'ramesh.kumar@college.edu.in', institution: 'GMRIT Rajam', appNo: 'ATAL-2026-001', score: 18, total: 20, percentage: 90, passed: true, violations: 0, timeTakenMinutes: 38, submittedAt: '19/12/2026, 18:08:15' },
+                { id: 'S2', name: 'Dr. Kavitha Reddy', email: 'kavitha.reddy@jntuk.edu.in', institution: 'JNTU Kakinada', appNo: 'ATAL-2026-002', score: 17, total: 20, percentage: 85, passed: true, violations: 1, timeTakenMinutes: 42, submittedAt: '19/12/2026, 18:12:30' },
+                { id: 'S3', name: 'Prof. Suresh Babu K', email: 'sureshbabu@vignan.ac.in', institution: 'Vignan University', appNo: 'ATAL-2026-003', score: 16, total: 20, percentage: 80, passed: true, violations: 0, timeTakenMinutes: 45, submittedAt: '19/12/2026, 18:15:20' },
+                { id: 'S4', name: 'Dr. Ananya Sen', email: 'ananya.sen@nitrkl.ac.in', institution: 'NIT Rourkela', appNo: 'ATAL-2026-004', score: 19, total: 20, percentage: 95, passed: true, violations: 0, timeTakenMinutes: 35, submittedAt: '19/12/2026, 18:05:00' },
+                { id: 'S5', name: 'Ravi Kumar Varma', email: 'ravi.varma@gmrit.edu.in', institution: 'GMRIT Rajam', appNo: 'ATAL-2026-005', score: 15, total: 20, percentage: 75, passed: true, violations: 2, timeTakenMinutes: 51, submittedAt: '19/12/2026, 18:21:10' },
+                { id: 'S6', name: 'Deepak Verma', email: 'deepak.v@dtu.ac.in', institution: 'Delhi Technological Univ', appNo: 'ATAL-2026-006', score: 11, total: 20, percentage: 55, passed: false, violations: 4, timeTakenMinutes: 58, submittedAt: '19/12/2026, 18:28:00' },
+                { id: 'S7', name: 'Pooja Sharma', email: 'pooja.sharma@thapar.edu', institution: 'Thapar Institute', appNo: 'ATAL-2026-007', score: 14, total: 20, percentage: 70, passed: true, violations: 0, timeTakenMinutes: 44, submittedAt: '19/12/2026, 18:14:10' },
+                { id: 'S8', name: 'Venkatesh Rao M', email: 'mvenkatesh@kluniversity.in', institution: 'KL University', appNo: 'ATAL-2026-008', score: 16, total: 20, percentage: 80, passed: true, violations: 1, timeTakenMinutes: 46, submittedAt: '19/12/2026, 18:16:45' },
+                { id: 'S9', name: 'Sneha Patil', email: 'sneha.patil@coep.ac.in', institution: 'COEP Pune', appNo: 'ATAL-2026-009', score: 13, total: 20, percentage: 65, passed: true, violations: 0, timeTakenMinutes: 49, submittedAt: '19/12/2026, 18:19:30' },
+                { id: 'S10', name: 'Girish Chandra', email: 'girish.c@bmsce.ac.in', institution: 'BMSCE Bengaluru', appNo: 'ATAL-2026-010', score: 9, total: 20, percentage: 45, passed: false, violations: 3, timeTakenMinutes: 55, submittedAt: '19/12/2026, 18:25:00' },
+                { id: 'S11', name: 'Dr. Swathi Narayanan', email: 'swathi.n@amrita.edu', institution: 'Amrita Vishwa Vidyapeetham', appNo: 'ATAL-2026-011', score: 17, total: 20, percentage: 85, passed: true, violations: 0, timeTakenMinutes: 39, submittedAt: '19/12/2026, 18:09:12' },
+                { id: 'S12', name: 'Harish Naidu', email: 'harish.naidu@gvpce.ac.in', institution: 'GVPCOE Visakhapatnam', appNo: 'ATAL-2026-012', score: 15, total: 20, percentage: 75, passed: true, violations: 0, timeTakenMinutes: 43, submittedAt: '19/12/2026, 18:13:50' },
+                { id: 'S13', name: 'Lakshmi Prasanna', email: 'lprasanna@vrsiddhartha.ac.in', institution: 'VR Siddhartha Engg College', appNo: 'ATAL-2026-013', score: 14, total: 20, percentage: 70, passed: true, violations: 1, timeTakenMinutes: 47, submittedAt: '19/12/2026, 18:17:20' },
+                { id: 'S14', name: 'Manoj Prabhakar', email: 'manoj.prabhakar@mit.edu', institution: 'Manipal Institute of Tech', appNo: 'ATAL-2026-014', score: 10, total: 20, percentage: 50, passed: false, violations: 1, timeTakenMinutes: 52, submittedAt: '19/12/2026, 18:22:15' },
+                { id: 'S15', name: 'Naveen Kumar G', email: 'gnaveen@svce.edu.in', institution: 'SVCE Tirupati', appNo: 'ATAL-2026-015', score: 16, total: 20, percentage: 80, passed: true, violations: 0, timeTakenMinutes: 41, submittedAt: '19/12/2026, 18:11:00' }
+            ];
+
+            submissions = sampleSubmissions;
+            try {
+                localStorage.setItem('atal_fdp_exam_submissions', JSON.stringify(submissions));
+            } catch (e) {}
+
+            renderGradebook();
+            showToast('Loaded 15 sample candidate exam submissions!');
+        });
+
+        // Initialize on page load
+        loadSubmissions();
+
+    })();
+    </script>
+</body>
+</html>
+

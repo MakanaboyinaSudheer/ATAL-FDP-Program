@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATAL FDP 2026 | MS Teams Attendance Intelligence & CSV Parser</title>
+    <meta name="description" content="Client-side Microsoft Teams attendance report parser, deduplicator and visualizer for AICTE ATAL Faculty Development Programme. Computes duration, reconnection aggregations, and 80% certification eligibility.">
+    <link rel="icon" type="image/png" href="../assets/aicte-logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- PapaParse CDN for CSV Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <!-- Chart.js CDN for Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.5); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.8); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
+        .drop-active {
+            border-color: #6366f1 !important;
+            background-color: rgba(99, 102, 241, 0.08) !important;
+            transform: scale(1.005);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- ================= TOP NAVIGATION BAR ================= -->
+    <header class="sticky top-0 z-50 border-b border-slate-800/80 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                <div class="flex items-center gap-3">
+                    <a href="../index.html" class="flex items-center gap-2.5 group">
+                        <img src="../assets/aicte-logo.png" alt="AICTE Logo" class="w-9 h-9 rounded-full bg-white p-0.5 shadow-md group-hover:scale-105 transition-transform">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-white text-sm tracking-tight">ATAL FDP 2026</span>
+                                <span class="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-500/20 text-brand-300 border border-brand-500/30">Coordinator Portal</span>
+                            </div>
+                            <span class="block text-[11px] font-medium text-slate-400">Teams Attendance Intelligence</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                    <a href="final-certification.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 hover:bg-emerald-900 transition"><i class="fa-solid fa-award text-xs"></i> <span class="hidden md:inline">Final Certification</span></a>
+                    <a href="exam-analytics.html"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-300 bg-brand-950/60 border border-brand-800/60 hover:bg-brand-900 transition">
+                        <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
+                        <span class="hidden md:inline">Exam Gradebook</span>
+                    </a>
+                    <button type="button" id="load-sample-btn"
+                            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-400"></i>
+                        <span class="hidden sm:inline">Load Sample Teams CSV</span>
+                        <span class="sm:hidden">Sample</span>
+                    </button>
+
+                    <a href="../index.html"
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white transition shadow-sm shadow-brand-600/30">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Main Portal</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Header Hero & Notice -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
+                    <i class="fa-solid fa-shield-halved"></i> 100% Client-Side Privacy — No participant data ever leaves your device
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    MS Teams Attendance Parser & Analytics
+                </h1>
+                <p class="mt-2 text-sm text-slate-400 max-w-3xl leading-relaxed">
+                    Upload official Microsoft Teams meeting attendance reports (<code class="text-brand-300 bg-slate-900 px-1.5 py-0.5 rounded text-xs font-mono">.csv</code>). 
+                    Automatically merges multiple reconnections for the same participant, sums total in-meeting minutes, and applies the official <strong class="text-slate-200">AICTE ATAL 80% attendance benchmark</strong>.
+                </p>
+            </div>
+
+            <!-- Target Session Duration Selector -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shrink-0 shadow-lg">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                    <i class="fa-regular fa-clock text-brand-400 mr-1"></i> Target Session Duration
+                </label>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="duration-preset-btn px-3 py-1.5 rounded-lg text-xs font-bold border transition-all active-preset bg-brand-600 text-white border-brand-500" data-mins="210">
+                        Days 1–5 (210m)
+                    </button>
+                    <button type="button" class="duration-preset-btn px-3 py-1.5 rounded-lg text-xs font-bold border transition-all bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700" data-mins="330">
+                        Day 6 (330m)
+                    </button>
+                    <div class="relative flex items-center">
+                        <input type="number" id="custom-duration-input" value="210" min="10" max="720"
+                               class="w-20 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs font-mono text-center text-white focus:outline-none focus:border-brand-500">
+                        <span class="ml-1 text-[11px] text-slate-400">mins</span>
+                    </div>
+                </div>
+                <p id="threshold-hint" class="mt-2 text-[11px] font-medium text-emerald-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-check-circle text-xs"></i> 80% AICTE ATAL Threshold: <strong class="text-white font-mono">168 mins</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- ================= UPLOAD DRAG & DROP ZONE ================= -->
+        <section id="upload-section" class="relative">
+            <div id="drop-zone"
+                 class="border-2 border-dashed border-slate-700 hover:border-brand-500 bg-slate-900/50 hover:bg-slate-900 rounded-3xl p-8 sm:p-12 text-center transition-all cursor-pointer group">
+                <input type="file" id="csv-file-input" accept=".csv,text/csv,text/plain" class="hidden">
+                <div class="max-w-md mx-auto space-y-4 pointer-events-none">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-600/10 border border-brand-500/20 text-brand-400 grid place-items-center text-2xl group-hover:scale-110 group-hover:bg-brand-600/20 transition-all">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white group-hover:text-brand-300 transition-colors">
+                            Drop Teams Attendance CSV here or click to browse
+                        </h2>
+                        <p class="mt-1 text-xs text-slate-400">
+                            Supports Microsoft Teams Attendance reports (UTF-8, UTF-16LE, tab/comma separated).
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-center gap-2 pt-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                            <i class="fa-solid fa-code-merge text-brand-400"></i> Auto-aggregates reconnects
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                            <i class="fa-solid fa-filter text-emerald-400"></i> Case-insensitive email grouping
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Feedback Message -->
+            <div id="upload-status" class="hidden mt-4 p-4 rounded-xl text-sm flex items-center justify-between border"></div>
+        </section>
+
+        <!-- ================= RESULTS DASHBOARD (HIDDEN INITIALLY) ================= -->
+        <div id="dashboard-results" class="hidden space-y-8 animate-fade-in">
+
+            <!-- KPI Summary Cards -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Total Attendees -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-700 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Unique Attendees</span>
+                        <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 grid place-items-center text-sm">
+                            <i class="fa-solid fa-users"></i>
+                        </span>
+                    </div>
+                    <div class="mt-3 flex items-baseline gap-2">
+                        <span id="kpi-total-attendees" class="text-3xl font-black text-white font-mono">0</span>
+                        <span class="text-xs text-slate-400">participants</span>
+                    </div>
+                    <p id="kpi-reconnects-sub" class="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-code-branch text-brand-400"></i> 0 reconnect events merged
+                    </p>
+                </div>
+
+                <!-- Qualified Attendees -->
+                <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-sm hover:border-emerald-500/50 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">ATAL Qualified (≥ 80%)</span>
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 grid place-items-center text-sm">
+                            <i class="fa-solid fa-certificate"></i>
+                        </span>
+                    </div>
+                    <div class="mt-3 flex items-baseline gap-2">
+                        <span id="kpi-qualified-count" class="text-3xl font-black text-emerald-400 font-mono">0</span>
+                        <span id="kpi-qualified-pct" class="text-sm font-bold text-emerald-300 font-mono">(0%)</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2.5 overflow-hidden">
+                        <div id="kpi-qualified-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Average Duration -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-700 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Average In-Meeting</span>
+                        <span class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 grid place-items-center text-sm">
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </span>
+                    </div>
+                    <div class="mt-3 flex items-baseline gap-2">
+                        <span id="kpi-avg-duration" class="text-3xl font-black text-white font-mono">0m</span>
+                        <span id="kpi-avg-duration-sub" class="text-xs text-slate-400 font-mono">(0 mins)</span>
+                    </div>
+                    <p id="kpi-duration-range" class="mt-2 text-xs text-slate-400 truncate">
+                        Range: 0m – 0m
+                    </p>
+                </div>
+
+                <!-- Attendance Rate -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm hover:border-slate-700 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Overall Session Rate</span>
+                        <span class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 grid place-items-center text-sm">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </span>
+                    </div>
+                    <div class="mt-3 flex items-baseline gap-2">
+                        <span id="kpi-overall-rate" class="text-3xl font-black text-white font-mono">0%</span>
+                        <span class="text-xs text-slate-400">of target</span>
+                    </div>
+                    <p class="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <i class="fa-regular fa-clock text-cyan-400"></i> Target: <span id="kpi-target-label" class="text-slate-300 font-semibold font-mono">210m</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Visual Charts Grid -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Doughnut Chart: Eligibility Status -->
+                <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-bold text-white text-base">Eligibility Breakdown</h3>
+                            <p class="text-xs text-slate-400">AICTE ATAL 80% certification status</p>
+                        </div>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                            Status Ratio
+                        </span>
+                    </div>
+                    <div class="relative h-64 flex items-center justify-center">
+                        <canvas id="eligibility-chart"></canvas>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800 grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                            <span class="block text-emerald-400 font-bold" id="legend-qualified-cnt">0</span>
+                            <span class="text-[11px] text-slate-400">Qualified</span>
+                        </div>
+                        <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <span class="block text-amber-400 font-bold" id="legend-partial-cnt">0</span>
+                            <span class="text-[11px] text-slate-400">Partial</span>
+                        </div>
+                        <div class="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                            <span class="block text-rose-400 font-bold" id="legend-minimal-cnt">0</span>
+                            <span class="text-[11px] text-slate-400">Dropped</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bar Chart: Duration Distribution -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-bold text-white text-base">Attendance Duration Distribution</h3>
+                            <p class="text-xs text-slate-400">Number of participants across duration brackets</p>
+                        </div>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-300 border border-brand-500/20">
+                            <i class="fa-solid fa-chart-column mr-1"></i> Minutes
+                        </span>
+                    </div>
+                    <div class="relative h-64">
+                        <canvas id="duration-chart"></canvas>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                        <span><i class="fa-solid fa-circle-info text-brand-400 mr-1"></i> Threshold line represents 80% mark.</span>
+                        <span id="distribution-subtext" class="text-slate-300 font-mono font-medium"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Table & Filter Section -->
+            <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-bold text-white text-lg">Consolidated Attendance Record</h3>
+                        <p class="text-xs text-slate-400">Deduplicated participants sorted by duration and attendance status</p>
+                    </div>
+
+                    <!-- Action Export Buttons -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" id="export-csv-btn"
+                                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition">
+                            <i class="fa-solid fa-file-arrow-down"></i> Export Cleaned CSV
+                        </button>
+                        <button type="button" id="copy-summary-btn"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+                            <i class="fa-regular fa-copy"></i> Copy Summary
+                        </button>
+                        <button type="button" id="clear-data-btn"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-slate-700 hover:border-rose-800/50 transition">
+                            <i class="fa-solid fa-trash-can"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter and Search Toolbar -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                    <!-- Status Filter Tabs -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
+                        <button type="button" data-filter="all" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white">
+                            All (<span id="count-all">0</span>)
+                        </button>
+                        <button type="button" data-filter="qualified" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                            Qualified (<span id="count-qualified">0</span>)
+                        </button>
+                        <button type="button" data-filter="partial" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                            Partial (<span id="count-partial">0</span>)
+                        </button>
+                        <button type="button" data-filter="minimal" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                            Dropped (<span id="count-minimal">0</span>)
+                        </button>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="table-search" placeholder="Search attendee name or email…"
+                               class="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <!-- Participants Table -->
+                <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-2xl">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 select-none">
+                            <tr>
+                                <th class="py-3 px-4 w-12 text-center">#</th>
+                                <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="name">
+                                    Participant Name <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                                </th>
+                                <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="email">
+                                    Email Address <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                                </th>
+                                <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="duration">
+                                    Total In-Meeting <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                                </th>
+                                <th class="py-3 px-4 cursor-pointer hover:text-white transition" data-sort="pct">
+                                    Attendance % <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                                </th>
+                                <th class="py-3 px-4 text-center cursor-pointer hover:text-white transition" data-sort="sessions">
+                                    Reconnects <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                                </th>
+                                <th class="py-3 px-4 text-right cursor-pointer hover:text-white transition" data-sort="status">
+                                    Status (AICTE) <i class="fa-solid fa-sort text-[10px] ml-1 text-slate-600"></i>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="participants-tbody" class="divide-y divide-slate-800/60 font-medium text-slate-300">
+                            <!-- Populated via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Empty State -->
+                <div id="table-empty" class="hidden py-12 text-center text-slate-500 text-xs">
+                    <i class="fa-regular fa-face-frown text-2xl mb-2 text-slate-600 block"></i>
+                    No participants match your current search or filter.
+                </div>
+
+                <!-- Table Pagination / Stats Footnote -->
+                <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+                    <span id="table-showing-text">Showing 0 of 0 attendees</span>
+                    <span class="text-[11px] text-slate-500">Grouped by lowercase email · Summed duration in minutes</span>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="border-t border-slate-900 bg-slate-950/80 py-6 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>&copy; 2026 Department of AI&amp;DS, Lakireddy Bali Reddy College of Engineering (LBRCE).</p>
+            <p class="flex items-center gap-2">
+                <span>AICTE ATAL Online FDP (14–19 Dec 2026)</span>
+                <span>·</span>
+                <a href="../index.html" class="text-brand-400 hover:text-brand-300 transition underline underline-offset-2">Main Portal</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-8 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- ================= DASHBOARD CORE LOGIC ================= -->
+    <script>
+    (() => {
+        'use strict';
+
+        // State
+        let targetDurationMinutes = 210; // Default for Days 1-5 (3h 30m)
+        let participantsData = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let sortColumn = 'duration';
+        let sortDirection = 'desc';
+
+        // Chart instances
+        let eligibilityChart = null;
+        let durationChart = null;
+
+        // Elements
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('csv-file-input');
+        const uploadStatus = document.getElementById('upload-status');
+        const dashboardResults = document.getElementById('dashboard-results');
+        const customDurationInput = document.getElementById('custom-duration-input');
+        const thresholdHint = document.getElementById('threshold-hint');
+        const toastEl = document.getElementById('toast');
+
+        // Helpers
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        
+        let toastTimeout;
+        function showToast(msg, icon = 'fa-circle-check text-emerald-400') {
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').className = `fa-solid ${icon} text-sm`;
+            toastEl.classList.remove('translate-y-8', 'opacity-0', 'pointer-events-none');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toastEl.classList.add('translate-y-8', 'opacity-0', 'pointer-events-none');
+            }, 3200);
+        }
+
+        function formatMinutes(mins) {
+            const m = Math.round(mins);
+            const hrs = Math.floor(m / 60);
+            const remMins = m % 60;
+            if (hrs > 0) {
+                return `${hrs}h ${remMins.toString().padStart(2, '0')}m`;
+            }
+            return `${remMins}m`;
+        }
+
+        function getInitials(name) {
+            if (!name) return '??';
+            const clean = name.replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.|Ms\.)\s+/i, '').trim();
+            const parts = clean.split(/\s+/).filter(Boolean);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return clean.substring(0, 2).toUpperCase();
+        }
+
+        // Parse duration strings (e.g., "1h 45m", "45m", "01:45:00", "120")
+        function parseDurationToMinutes(val) {
+            if (val === null || val === undefined) return 0;
+            let str = String(val).trim();
+            if (!str) return 0;
+
+            // Format: hh:mm:ss or mm:ss
+            if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(str)) {
+                const parts = str.split(':').map(Number);
+                if (parts.length === 3) {
+                    return parts[0] * 60 + parts[1] + (parts[2] / 60);
+                } else if (parts.length === 2) {
+                    return parts[0] + (parts[1] / 60);
+                }
+            }
+
+            let totalMinutes = 0;
+            let matched = false;
+
+            const hMatch = str.match(/(\d+(?:\.\d+)?)\s*(?:h|hr|hrs|hour|hours)/i);
+            if (hMatch) {
+                totalMinutes += parseFloat(hMatch[1]) * 60;
+                matched = true;
+            }
+
+            const mMatch = str.match(/(\d+(?:\.\d+)?)\s*(?:m|min|mins|minute|minutes)(?!s)/i);
+            if (mMatch) {
+                totalMinutes += parseFloat(mMatch[1]);
+                matched = true;
+            }
+
+            const sMatch = str.match(/(\d+(?:\.\d+)?)\s*(?:s|sec|secs|second|seconds)/i);
+            if (sMatch) {
+                totalMinutes += parseFloat(sMatch[1]) / 60;
+                matched = true;
+            }
+
+            if (matched) return Math.round(totalMinutes * 10) / 10;
+
+            // Raw numeric fallback
+            const numeric = parseFloat(str.replace(/[^\d.]/g, ''));
+            if (!isNaN(numeric)) {
+                // If number is exceptionally large (> 600) and no unit, could be seconds
+                if (numeric > 600 && !str.toLowerCase().includes('m')) {
+                    return Math.round((numeric / 60) * 10) / 10;
+                }
+                return numeric;
+            }
+
+            return 0;
+        }
+
+        // Read file handling UTF-16LE / UTF-8 with BOM
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const buffer = e.target.result;
+                    const bytes = new Uint8Array(buffer);
+                    let encoding = 'utf-8';
+                    if (bytes.length >= 2 && bytes[0] === 0xFF && bytes[1] === 0xFE) {
+                        encoding = 'utf-16le';
+                    } else if (bytes.length >= 2 && bytes[0] === 0xFE && bytes[1] === 0xFF) {
+                        encoding = 'utf-16be';
+                    } else if (bytes.length >= 3 && bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF) {
+                        encoding = 'utf-8';
+                    }
+                    try {
+                        const decoder = new TextDecoder(encoding);
+                        resolve(decoder.decode(buffer));
+                    } catch (err) {
+                        // Fallback
+                        const fallbackDecoder = new TextDecoder('utf-8');
+                        resolve(fallbackDecoder.decode(buffer));
+                    }
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // Clean & Extract CSV Table from Teams format
+        function extractAttendeesCsv(rawText) {
+            const lines = rawText.split(/\r?\n/);
+            
+            // Check if there is a '2. Attendees' section marker common in Teams
+            let startIndex = 0;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (/^2\.\s*Attendees/i.test(line) || /^Attendees/i.test(line)) {
+                    // Next non-empty line is likely the header
+                    for (let j = i + 1; j < lines.length; j++) {
+                        if (lines[j].trim().length > 0) {
+                            startIndex = j;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            // If no section marker, search for header row containing Name and Duration or Email
+            if (startIndex === 0) {
+                for (let i = 0; i < Math.min(lines.length, 15); i++) {
+                    const l = lines[i].toLowerCase();
+                    if ((l.includes('name') || l.includes('participant')) && (l.includes('duration') || l.includes('email') || l.includes('join'))) {
+                        startIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            return lines.slice(startIndex).join('\n');
+        }
+
+        // Process raw parsed rows
+        function aggregateParticipants(rows) {
+            const map = new Map();
+            let totalReconnectEvents = 0;
+
+            rows.forEach(row => {
+                const keys = Object.keys(row);
+                if (keys.length === 0) return;
+
+                // Identify fields dynamically
+                const nameKey = keys.find(k => /(full\s*name|attendee\s*name|participant\s*name|^name$|display\s*name)/i.test(k));
+                const emailKey = keys.find(k => /(user\s*email|email\s*address|^email$|upn|participant\s*id)/i.test(k));
+                const durationKey = keys.find(k => /(in-meeting\s*duration|in\s*meeting\s*duration|^duration$|time\s*in\s*meeting|total\s*duration)/i.test(k));
+                const roleKey = keys.find(k => /role/i.test(k));
+
+                const rawName = (nameKey ? row[nameKey] : '')?.trim() || 'Unknown Participant';
+                const rawEmail = (emailKey ? row[emailKey] : '')?.trim() || '';
+                const rawDuration = durationKey ? row[durationKey] : '';
+                const role = (roleKey ? row[roleKey] : '')?.trim() || 'Attendee';
+
+                const durationMins = parseDurationToMinutes(rawDuration);
+                if (durationMins <= 0 && !rawName && !rawEmail) return;
+
+                // Primary aggregation key: lowercase email, or fallback to lowercase name
+                const groupKey = rawEmail ? rawEmail.toLowerCase() : `name:${rawName.toLowerCase()}`;
+
+                if (map.has(groupKey)) {
+                    const existing = map.get(groupKey);
+                    existing.durationMinutes += durationMins;
+                    existing.sessionsCount += 1;
+                    totalReconnectEvents += 1;
+                    // Pick the longer/nicer formatted name
+                    if (rawName.length > existing.name.length) existing.name = rawName;
+                    if (rawEmail && !existing.email) existing.email = rawEmail;
+                } else {
+                    map.set(groupKey, {
+                        name: rawName,
+                        email: rawEmail || 'N/A (Joined as Guest)',
+                        rawEmailKey: rawEmail.toLowerCase(),
+                        durationMinutes: durationMins,
+                        sessionsCount: 1,
+                        role: role
+                    });
+                }
+            });
+
+            // Calculate criteria for each participant
+            const threshold80 = targetDurationMinutes * 0.80;
+            const threshold20 = targetDurationMinutes * 0.20;
+
+            const list = Array.from(map.values()).map(p => {
+                const pct = Math.min(100, Math.round((p.durationMinutes / targetDurationMinutes) * 1000) / 10);
+                let status = 'qualified';
+                if (p.durationMinutes >= threshold80) {
+                    status = 'qualified';
+                } else if (p.durationMinutes >= threshold20) {
+                    status = 'partial';
+                } else {
+                    status = 'minimal';
+                }
+
+                return {
+                    ...p,
+                    attendancePct: pct,
+                    status: status,
+                    isQualified: (p.durationMinutes >= threshold80)
+                };
+            });
+
+            return { list, totalReconnectEvents };
+        }
+
+        // Render Dashboard KPIs, Charts, and Table
+        function renderDashboard() {
+            if (participantsData.length === 0) {
+                dashboardResults.classList.add('hidden');
+                return;
+            }
+
+            dashboardResults.classList.remove('hidden');
+
+            const total = participantsData.length;
+            const threshold80 = targetDurationMinutes * 0.80;
+            const qualified = participantsData.filter(p => p.durationMinutes >= threshold80);
+            const partial = participantsData.filter(p => p.durationMinutes < threshold80 && p.durationMinutes >= targetDurationMinutes * 0.20);
+            const minimal = participantsData.filter(p => p.durationMinutes < targetDurationMinutes * 0.20);
+
+            const totalMinutesSum = participantsData.reduce((acc, p) => acc + p.durationMinutes, 0);
+            const avgMinutes = total > 0 ? (totalMinutesSum / total) : 0;
+            const qualifiedPct = total > 0 ? Math.round((qualified.length / total) * 1000) / 10 : 0;
+            const overallRate = targetDurationMinutes > 0 ? Math.round((avgMinutes / targetDurationMinutes) * 1000) / 10 : 0;
+
+            const minDuration = Math.min(...participantsData.map(p => p.durationMinutes));
+            const maxDuration = Math.max(...participantsData.map(p => p.durationMinutes));
+
+            // Update KPIs
+            document.getElementById('kpi-total-attendees').textContent = total;
+            document.getElementById('kpi-qualified-count').textContent = qualified.length;
+            document.getElementById('kpi-qualified-pct').textContent = `(${qualifiedPct}%)`;
+            document.getElementById('kpi-qualified-bar').style.width = `${qualifiedPct}%`;
+            document.getElementById('kpi-avg-duration').textContent = formatMinutes(avgMinutes);
+            document.getElementById('kpi-avg-duration-sub').textContent = `(${Math.round(avgMinutes)} mins)`;
+            document.getElementById('kpi-overall-rate').textContent = `${overallRate}%`;
+            document.getElementById('kpi-target-label').textContent = `${targetDurationMinutes}m`;
+            document.getElementById('kpi-duration-range').textContent = `Range: ${formatMinutes(minDuration)} – ${formatMinutes(maxDuration)}`;
+
+            // Legend counts
+            document.getElementById('legend-qualified-cnt').textContent = `${qualified.length} (${qualifiedPct}%)`;
+            document.getElementById('legend-partial-cnt').textContent = `${partial.length} (${Math.round((partial.length / total) * 100)}%)`;
+            document.getElementById('legend-minimal-cnt').textContent = `${minimal.length} (${Math.round((minimal.length / total) * 100)}%)`;
+
+            // Filter button badges
+            document.getElementById('count-all').textContent = total;
+            document.getElementById('count-qualified').textContent = qualified.length;
+            document.getElementById('count-partial').textContent = partial.length;
+            document.getElementById('count-minimal').textContent = minimal.length;
+
+            renderCharts(qualified.length, partial.length, minimal.length);
+            renderTable();
+        }
+
+        // Render Chart.js Visualizations
+        function renderCharts(qCount, pCount, mCount) {
+            // Chart 1: Doughnut Breakdown
+            const ctxDoughnut = document.getElementById('eligibility-chart').getContext('2d');
+            if (eligibilityChart) eligibilityChart.destroy();
+
+            eligibilityChart = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Qualified (≥80%)', 'Partial (<80%)', 'Dropped (<20%)'],
+                    datasets: [{
+                        data: [qCount, pCount, mCount],
+                        backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                        borderColor: '#0f172a',
+                        borderWidth: 3,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#94a3b8',
+                                font: { family: 'Inter', size: 11, weight: '600' },
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const val = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                    return ` ${context.label}: ${val} (${pct}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '68%'
+                }
+            });
+
+            // Chart 2: Bar Duration Distribution
+            const b1 = participantsData.filter(p => p.durationMinutes < 60).length;
+            const b2 = participantsData.filter(p => p.durationMinutes >= 60 && p.durationMinutes < 120).length;
+            const b3 = participantsData.filter(p => p.durationMinutes >= 120 && p.durationMinutes < targetDurationMinutes * 0.80).length;
+            const b4 = participantsData.filter(p => p.durationMinutes >= targetDurationMinutes * 0.80).length;
+
+            const ctxBar = document.getElementById('duration-chart').getContext('2d');
+            if (durationChart) durationChart.destroy();
+
+            durationChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['< 1 hr (<60m)', '1–2 hrs (60-119m)', `2 hrs – 80% (120-${Math.round(targetDurationMinutes * 0.8)}m)`, `≥ 80% (${Math.round(targetDurationMinutes * 0.8)}m+)`],
+                    datasets: [{
+                        label: 'Attendees',
+                        data: [b1, b2, b3, b4],
+                        backgroundColor: ['#f43f5e', '#f59e0b', '#818cf8', '#10b981'],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => ` Attendees: ${context.raw}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 10, weight: '500' } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 10 }, stepSize: 1 },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('distribution-subtext').textContent = `Target: ${targetDurationMinutes}m | 80% = ${Math.round(targetDurationMinutes * 0.8)}m`;
+        }
+
+        // Render Sortable & Searchable Table
+        function renderTable() {
+            const tbody = document.getElementById('participants-tbody');
+            const emptyEl = document.getElementById('table-empty');
+            const showingText = document.getElementById('table-showing-text');
+
+            // Apply filter & search
+            let filtered = participantsData.filter(p => {
+                if (currentFilter !== 'all' && p.status !== currentFilter) return false;
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    const matchName = p.name.toLowerCase().includes(q);
+                    const matchEmail = p.email.toLowerCase().includes(q);
+                    if (!matchName && !matchEmail) return false;
+                }
+                return true;
+            });
+
+            // Sort
+            filtered.sort((a, b) => {
+                let vA = a[sortColumn];
+                let vB = b[sortColumn];
+                if (sortColumn === 'pct') { vA = a.attendancePct; vB = b.attendancePct; }
+                if (sortColumn === 'sessions') { vA = a.sessionsCount; vB = b.sessionsCount; }
+
+                if (typeof vA === 'string') {
+                    return sortDirection === 'asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
+                }
+                return sortDirection === 'asc' ? (vA - vB) : (vB - vA);
+            });
+
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyEl.classList.remove('hidden');
+            } else {
+                emptyEl.classList.add('hidden');
+            }
+
+            showingText.textContent = `Showing ${filtered.length} of ${participantsData.length} attendees`;
+
+            filtered.forEach((p, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/40 transition border-b border-slate-800/40';
+
+                let statusBadge = '';
+                if (p.status === 'qualified') {
+                    statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <i class="fa-solid fa-circle-check"></i> Qualified
+                    </span>`;
+                } else if (p.status === 'partial') {
+                    statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Partial (<80%)
+                    </span>`;
+                } else {
+                    statusBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                        <i class="fa-solid fa-circle-xmark"></i> Dropped (<20%)
+                    </span>`;
+                }
+
+                const reconnectBadge = p.sessionsCount > 1
+                    ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30" title="Participant rejoined ${p.sessionsCount} times">
+                        <i class="fa-solid fa-rotate text-[9px]"></i> ${p.sessionsCount} joins
+                       </span>`
+                    : `<span class="text-slate-500 text-[11px]">1 session</span>`;
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 text-center text-slate-500 font-mono text-[11px]">${index + 1}</td>
+                    <td class="py-3.5 px-4">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-7 h-7 shrink-0 rounded-lg bg-gradient-to-br from-slate-800 to-slate-700 text-brand-300 text-[10px] font-bold grid place-items-center border border-slate-700">
+                                ${getInitials(p.name)}
+                            </span>
+                            <span class="font-bold text-white text-xs truncate max-w-[200px] sm:max-w-xs">${esc(p.name)}</span>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <span class="text-slate-300 font-mono text-[11px] truncate block max-w-[220px]">${esc(p.email)}</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <div class="font-bold text-white font-mono text-xs">${formatMinutes(p.durationMinutes)}</div>
+                        <div class="text-[10px] text-slate-500 font-mono">${Math.round(p.durationMinutes)} mins</div>
+                    </td>
+                    <td class="py-3.5 px-4">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold font-mono text-xs ${p.isQualified ? 'text-emerald-400' : 'text-slate-300'}">${p.attendancePct}%</span>
+                            <div class="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                <div class="${p.isQualified ? 'bg-emerald-500' : p.status === 'partial' ? 'bg-amber-500' : 'bg-rose-500'} h-1.5 rounded-full" style="width: ${Math.min(100, p.attendancePct)}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-4 text-center">
+                        ${reconnectBadge}
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                        ${statusBadge}
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Parse CSV Text with PapaParse
+        function parseCsvText(rawText, sourceFileName = 'Teams Report') {
+            const cleanedText = extractAttendeesCsv(rawText);
+
+            Papa.parse(cleanedText, {
+                header: true,
+                skipEmptyLines: 'greedy',
+                dynamicTyping: false,
+                complete: function(results) {
+                    if (!results.data || results.data.length === 0) {
+                        uploadStatus.className = 'mt-4 p-4 rounded-xl text-sm flex items-center justify-between border bg-rose-500/10 text-rose-300 border-rose-500/30';
+                        uploadStatus.innerHTML = `<span><i class="fa-solid fa-circle-exclamation mr-2"></i>Could not identify attendee columns in <strong>${esc(sourceFileName)}</strong>. Please verify it is an exported Teams attendance CSV.</span>`;
+                        uploadStatus.classList.remove('hidden');
+                        return;
+                    }
+
+                    const { list, totalReconnectEvents } = aggregateParticipants(results.data);
+
+                    if (list.length === 0) {
+                        uploadStatus.className = 'mt-4 p-4 rounded-xl text-sm flex items-center justify-between border bg-amber-500/10 text-amber-300 border-amber-500/30';
+                        uploadStatus.innerHTML = `<span><i class="fa-solid fa-triangle-exclamation mr-2"></i>Found CSV data, but 0 valid attendees with durations could be extracted.</span>`;
+                        uploadStatus.classList.remove('hidden');
+                        return;
+                    }
+
+                    participantsData = list;
+
+                    // Update UI status banner
+                    uploadStatus.className = 'mt-4 p-4 rounded-xl text-sm flex items-center justify-between border bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
+                    uploadStatus.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-base"></i>
+                            <div>
+                                <span class="font-bold text-white">${esc(sourceFileName)} parsed successfully!</span>
+                                <span class="block text-xs text-emerald-400 mt-0.5">Extracted ${list.length} unique participants (${totalReconnectEvents} reconnect events merged).</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="this.parentElement.classList.add('hidden')" class="text-slate-400 hover:text-white p-1">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    `;
+                    uploadStatus.classList.remove('hidden');
+
+                    document.getElementById('kpi-reconnects-sub').innerHTML = `<i class="fa-solid fa-code-branch text-brand-400"></i> ${totalReconnectEvents} reconnect events merged`;
+
+                    renderDashboard();
+                    showToast(`Successfully analyzed ${list.length} attendees!`);
+                },
+                error: function(err) {
+                    console.error('PapaParse error:', err);
+                    uploadStatus.className = 'mt-4 p-4 rounded-xl text-sm flex items-center justify-between border bg-rose-500/10 text-rose-300 border-rose-500/30';
+                    uploadStatus.innerHTML = `<span><i class="fa-solid fa-triangle-exclamation mr-2"></i>Failed to parse CSV: ${esc(err.message)}</span>`;
+                    uploadStatus.classList.remove('hidden');
+                }
+            });
+        }
+
+        // File Handler
+        async function handleUploadedFile(file) {
+            if (!file) return;
+            try {
+                uploadStatus.className = 'mt-4 p-4 rounded-xl text-sm flex items-center justify-between border bg-slate-800 text-slate-300 border-slate-700';
+                uploadStatus.innerHTML = `<span><i class="fa-solid fa-spinner fa-spin mr-2"></i>Reading and decoding <strong>${esc(file.name)}</strong>…</span>`;
+                uploadStatus.classList.remove('hidden');
+
+                const text = await readFileAsText(file);
+                parseCsvText(text, file.name);
+            } catch (err) {
+                console.error('File reading error:', err);
+                uploadStatus.className = 'mt-4 p-4 rounded-xl text-sm flex items-center justify-between border bg-rose-500/10 text-rose-300 border-rose-500/30';
+                uploadStatus.innerHTML = `<span><i class="fa-solid fa-circle-exclamation mr-2"></i>Failed to read file: ${esc(err.message)}</span>`;
+                uploadStatus.classList.remove('hidden');
+            }
+        }
+
+        // Drag and Drop Event Listeners
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', e => {
+            if (e.target.files && e.target.files[0]) {
+                handleUploadedFile(e.target.files[0]);
+            }
+        });
+
+        ['dragenter', 'dragover'].forEach(name => {
+            dropZone.addEventListener(name, e => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('drop-active');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(name => {
+            dropZone.addEventListener(name, e => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('drop-active');
+            });
+        });
+
+        dropZone.addEventListener('drop', e => {
+            const dt = e.dataTransfer;
+            if (dt && dt.files && dt.files[0]) {
+                handleUploadedFile(dt.files[0]);
+            }
+        });
+
+        // Duration Presets & Input
+        function updateTargetDuration(newMins) {
+            targetDurationMinutes = Math.max(10, Math.min(720, Number(newMins) || 210));
+            customDurationInput.value = targetDurationMinutes;
+
+            const t80 = Math.round(targetDurationMinutes * 0.80);
+            thresholdHint.innerHTML = `<i class="fa-solid fa-check-circle text-xs"></i> 80% AICTE ATAL Threshold: <strong class="text-white font-mono">${t80} mins</strong>`;
+
+            // Update preset button states
+            document.querySelectorAll('.duration-preset-btn').forEach(btn => {
+                const bMins = Number(btn.dataset.mins);
+                if (bMins === targetDurationMinutes) {
+                    btn.className = 'duration-preset-btn px-3 py-1.5 rounded-lg text-xs font-bold border transition-all bg-brand-600 text-white border-brand-500 shadow-sm';
+                } else {
+                    btn.className = 'duration-preset-btn px-3 py-1.5 rounded-lg text-xs font-bold border transition-all bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700';
+                }
+            });
+
+            // Re-evaluate participants with new duration
+            if (participantsData.length > 0) {
+                const threshold80 = targetDurationMinutes * 0.80;
+                const threshold20 = targetDurationMinutes * 0.20;
+
+                participantsData = participantsData.map(p => {
+                    const pct = Math.min(100, Math.round((p.durationMinutes / targetDurationMinutes) * 1000) / 10);
+                    let status = 'qualified';
+                    if (p.durationMinutes >= threshold80) {
+                        status = 'qualified';
+                    } else if (p.durationMinutes >= threshold20) {
+                        status = 'partial';
+                    } else {
+                        status = 'minimal';
+                    }
+                    return {
+                        ...p,
+                        attendancePct: pct,
+                        status: status,
+                        isQualified: (p.durationMinutes >= threshold80)
+                    };
+                });
+
+                renderDashboard();
+                showToast(`Session target updated to ${targetDurationMinutes} mins`);
+            }
+        }
+
+        document.querySelectorAll('.duration-preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateTargetDuration(btn.dataset.mins);
+            });
+        });
+
+        customDurationInput.addEventListener('change', () => {
+            updateTargetDuration(customDurationInput.value);
+        });
+
+        // Filter Tabs
+        document.querySelectorAll('.table-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentFilter = btn.dataset.filter;
+                document.querySelectorAll('.table-filter-btn').forEach(b => {
+                    if (b.dataset.filter === currentFilter) {
+                        b.className = 'table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white shadow-sm';
+                    } else {
+                        b.className = 'table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700';
+                    }
+                });
+                renderTable();
+            });
+        });
+
+        // Search Input
+        document.getElementById('table-search').addEventListener('input', e => {
+            searchQuery = e.target.value.trim();
+            renderTable();
+        });
+
+        // Sorting
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.dataset.sort;
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'desc';
+                }
+                renderTable();
+            });
+        });
+
+        // Export Cleaned CSV
+        document.getElementById('export-csv-btn').addEventListener('click', () => {
+            if (participantsData.length === 0) return;
+
+            const headers = [
+                'Full Name',
+                'Email Address',
+                'Total Duration (Minutes)',
+                'Total Duration (Formatted)',
+                'Attendance Percentage (%)',
+                'Target Session Duration (Minutes)',
+                'AICTE ATAL Eligible (>=80%)',
+                'Status Category',
+                'Reconnect Count'
+            ];
+
+            const rows = participantsData.map(p => [
+                `"${p.name.replace(/"/g, '""')}"`,
+                `"${p.email.replace(/"/g, '""')}"`,
+                Math.round(p.durationMinutes * 10) / 10,
+                `"${formatMinutes(p.durationMinutes)}"`,
+                `${p.attendancePct}%`,
+                targetDurationMinutes,
+                p.isQualified ? 'YES' : 'NO',
+                `"${p.status.toUpperCase()}"`,
+                p.sessionsCount
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const today = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `ATAL-FDP-Cleaned-Attendance-${today}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Cleaned CSV downloaded successfully!');
+        });
+
+        // Copy Summary to Clipboard
+        document.getElementById('copy-summary-btn').addEventListener('click', async () => {
+            if (participantsData.length === 0) return;
+
+            const threshold80 = targetDurationMinutes * 0.80;
+            const qualified = participantsData.filter(p => p.durationMinutes >= threshold80);
+            const summary = [
+                `AICTE ATAL FDP 2026 — Attendance Summary Report`,
+                `Date Generated: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST`,
+                `Session Target: ${targetDurationMinutes} mins (80% Benchmark: ${threshold80} mins)`,
+                `--------------------------------------------------`,
+                `Total Unique Attendees: ${participantsData.length}`,
+                `Qualified for Certificate (>=80%): ${qualified.length} (${Math.round((qualified.length / participantsData.length) * 100)}%)`,
+                `Average Attendance Duration: ${formatMinutes(participantsData.reduce((a, b) => a + b.durationMinutes, 0) / participantsData.length)}`,
+                `--------------------------------------------------`,
+                `Dept. of AI&DS, Lakireddy Bali Reddy College of Engineering (LBRCE)`
+            ].join('\n');
+
+            try {
+                await navigator.clipboard.writeText(summary);
+                showToast('Attendance summary copied to clipboard!');
+            } catch (err) {
+                showToast('Could not copy to clipboard', 'fa-triangle-exclamation text-amber-400');
+            }
+        });
+
+        // Clear Data
+        document.getElementById('clear-data-btn').addEventListener('click', () => {
+            participantsData = [];
+            fileInput.value = '';
+            uploadStatus.classList.add('hidden');
+            renderDashboard();
+            showToast('Dashboard cleared');
+        });
+
+        // ================= SAMPLE DATA GENERATOR =================
+        // Generates realistic Teams CSV format with multiple joins, UTF-8 strings, and varied attendance
+        document.getElementById('load-sample-btn').addEventListener('click', () => {
+            const sampleTeamsCsv = `1. Summary
+Meeting title	AICTE ATAL Online 6-Day FDP: AI-Driven Materials Intelligence
+Total attendees	32
+Meeting start time	14/12/2026, 17:50:12
+Meeting end time	14/12/2026, 21:34:40
+
+2. Attendees
+Name	First join	Last leave	In-meeting duration	Email	Role	Participant ID (UPN)
+Dr. P. Bhagath	14/12/2026, 17:50:12	14/12/2026, 21:34:40	3h 44m	bhagath@lbrce.ac.in	Organizer	bhagath@lbrce.ac.in
+Prof. Pradip K Das	14/12/2026, 18:02:11	14/12/2026, 21:28:15	3h 26m	pkdas@iitg.ac.in	Presenter	pkdas@iitg.ac.in
+Dr. T Ram Prabhu	14/12/2026, 18:05:00	14/12/2026, 21:30:00	3h 25m	ramprabhu@drdo.gov.in	Presenter	ramprabhu@drdo.gov.in
+Dr. Ch. Rajendra Babu	14/12/2026, 17:55:20	14/12/2026, 21:32:10	3h 36m	rajendrababu@lbrce.ac.in	Presenter	rajendrababu@lbrce.ac.in
+Ravi Kumar Varma	14/12/2026, 18:00:10	14/12/2026, 19:15:20	1h 15m	ravi.varma@gmrit.edu.in	Attendee	ravi.varma@gmrit.edu.in
+Ravi Kumar Varma	14/12/2026, 19:22:05	14/12/2026, 21:20:12	1h 58m	ravi.varma@gmrit.edu.in	Attendee	ravi.varma@gmrit.edu.in
+Suresh Babu K	14/12/2026, 18:05:14	14/12/2026, 21:25:30	3h 20m	sureshbabu@vignan.ac.in	Attendee	sureshbabu@vignan.ac.in
+Ananya Sen	14/12/2026, 18:10:00	14/12/2026, 21:29:45	3h 19m	ananya.sen@nitrkl.ac.in	Attendee	ananya.sen@nitrkl.ac.in
+Kavitha Reddy	14/12/2026, 18:00:45	14/12/2026, 19:10:00	1h 09m	kavitha.reddy@jntuk.edu.in	Attendee	kavitha.reddy@jntuk.edu.in
+Kavitha Reddy	14/12/2026, 19:15:30	14/12/2026, 20:30:10	1h 14m	kavitha.reddy@jntuk.edu.in	Attendee	kavitha.reddy@jntuk.edu.in
+Kavitha Reddy	14/12/2026, 20:35:00	14/12/2026, 21:25:15	50m	kavitha.reddy@jntuk.edu.in	Attendee	kavitha.reddy@jntuk.edu.in
+Venkatesh Rao M	14/12/2026, 18:02:40	14/12/2026, 21:30:15	3h 27m	mvenkatesh@kluniversity.in	Attendee	mvenkatesh@kluniversity.in
+Pooja Sharma	14/12/2026, 18:12:00	14/12/2026, 21:15:00	3h 03m	pooja.sharma@thapar.edu	Attendee	pooja.sharma@thapar.edu
+Naveen Kumar G	14/12/2026, 18:00:22	14/12/2026, 21:30:44	3h 30m	gnaveen@svce.edu.in	Attendee	gnaveen@svce.edu.in
+Deepak Verma	14/12/2026, 18:20:10	14/12/2026, 20:10:15	1h 50m	deepak.v@dtu.ac.in	Attendee	deepak.v@dtu.ac.in
+Deepak Verma	14/12/2026, 20:25:00	14/12/2026, 21:20:00	55m	deepak.v@dtu.ac.in	Attendee	deepak.v@dtu.ac.in
+Sneha Patil	14/12/2026, 18:08:30	14/12/2026, 21:22:10	3h 13m	sneha.patil@coep.ac.in	Attendee	sneha.patil@coep.ac.in
+Manoj Prabhakar	14/12/2026, 18:15:00	14/12/2026, 20:00:00	1h 45m	manoj.prabhakar@mit.edu	Attendee	manoj.prabhakar@mit.edu
+Swathi Narayanan	14/12/2026, 18:04:12	14/12/2026, 21:31:00	3h 26m	swathi.n@amrita.edu	Attendee	swathi.n@amrita.edu
+Vikramaditya S	14/12/2026, 18:30:00	14/12/2026, 21:25:00	2h 55m	vikram.s@iiitd.ac.in	Attendee	vikram.s@iiitd.ac.in
+Priyanka Roy	14/12/2026, 18:01:00	14/12/2026, 19:40:00	1h 39m	priyanka.roy@heritageit.edu	Attendee	priyanka.roy@heritageit.edu
+Girish Chandra	14/12/2026, 18:00:00	14/12/2026, 18:35:10	35m	girish.c@bmsce.ac.in	Attendee	girish.c@bmsce.ac.in
+Lakshmi Prasanna	14/12/2026, 18:05:00	14/12/2026, 21:28:00	3h 23m	lprasanna@vrsiddhartha.ac.in	Attendee	lprasanna@vrsiddhartha.ac.in
+Aditya Kashyap	14/12/2026, 18:10:00	14/12/2026, 18:25:00	15m	aditya.k@lnmiit.ac.in	Attendee	aditya.k@lnmiit.ac.in
+Harish Naidu	14/12/2026, 18:00:30	14/12/2026, 21:30:00	3h 29m	harish.naidu@gvpce.ac.in	Attendee	harish.naidu@gvpce.ac.in
+Meenakshi Sundaram	14/12/2026, 18:15:00	14/12/2026, 21:10:00	2h 55m	msundaram@psgtech.edu	Attendee	msundaram@psgtech.edu
+Subhashree Mohanty	14/12/2026, 18:02:00	14/12/2026, 21:27:00	3h 25m	subhashree@iter.ac.in	Attendee	subhashree@iter.ac.in
+Guest_Academic_01	14/12/2026, 18:15:00	14/12/2026, 20:30:00	2h 15m		Attendee	
+Arun Kumar Panda	14/12/2026, 18:45:00	14/12/2026, 19:15:00	30m	arun.panda@kiit.ac.in	Attendee	arun.panda@kiit.ac.in
+Sandhya Rani B	14/12/2026, 18:05:00	14/12/2026, 21:30:00	3h 25m	sandhyarani@rgukt.ac.in	Attendee	sandhyarani@rgukt.ac.in
+Guest_Researcher_9	14/12/2026, 18:00:00	14/12/2026, 18:18:00	18m		Attendee	`;
+
+            parseCsvText(sampleTeamsCsv, 'Demo_Teams_Attendance_Day1.csv');
+        });
+
+    })();
+    </script>
+</body>
+</html>
+

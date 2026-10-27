@@ -101,7 +101,12 @@
                 </ul>
 
                 <div class="flex items-center gap-2">
-                    
+                    <a href="lms/exam.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition border border-indigo-200">
+                        <i class="fa-solid fa-file-pen text-indigo-600"></i> Online Exam
+                    </a>
+                    <a href="admin/attendance.html" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition border border-slate-200">
+                        <i class="fa-solid fa-chart-pie text-brand-600"></i> Coordinator Admin
+                    </a>
                     <button id="menu-btn" class="lg:hidden w-10 h-10 grid place-items-center rounded-xl text-slate-700 hover:bg-slate-100 transition"
                             aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
                         <i class="fa-solid fa-bars text-lg"></i>
@@ -129,6 +134,7 @@
             <li><a href="#register" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-solid fa-pen-to-square w-5 text-brand-600"></i>How to Register</a></li>
             <li><a href="#faq" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-regular fa-circle-question w-5 text-brand-600"></i>FAQ</a></li>
             <li><a href="#contact" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700"><i class="fa-regular fa-envelope w-5 text-brand-600"></i>Contact</a></li>
+            <li><a href="admin/attendance.html" class="drawer-link flex items-center gap-3 px-4 py-3 rounded-xl text-brand-700 bg-brand-50/70 hover:bg-brand-100 font-bold"><i class="fa-solid fa-chart-pie w-5 text-brand-600"></i>Attendance Portal</a></li>
         </ul>
         <div class="p-4 border-t border-slate-100">
             <a href="https://atalacademy.aicte-india.org" target="_blank" rel="noopener noreferrer"
@@ -466,6 +472,24 @@
                             </div>
                         </article>
 
+                        <article class="bg-gradient-to-br from-indigo-50/80 to-brand-50/80 rounded-2xl ring-1 ring-brand-200 p-6 shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <span class="w-10 h-10 rounded-xl bg-brand-600 text-white grid place-items-center text-sm shadow-md">
+                                    <i class="fa-solid fa-chart-pie"></i>
+                                </span>
+                                <div>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-brand-700">Coordinators Tool</span>
+                                    <h3 class="font-bold text-slate-900 text-sm">Teams Attendance Intelligence</h3>
+                                </div>
+                            </div>
+                            <p class="mt-2 text-xs text-slate-600 leading-relaxed">
+                                Upload MS Teams CSV reports to parse in-meeting durations, merge participant reconnects, and verify 80% AICTE ATAL eligibility.
+                            </p>
+                            <a href="admin/attendance.html" class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:text-brand-800">
+                                Launch Attendance Dashboard <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </article>
+
                         <article class="bg-white rounded-2xl ring-1 ring-slate-200 p-6 shadow-sm">
                             <h3 class="font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-600"></i>Organising Institution</h3>
                             <p class="mt-2 text-sm text-slate-600 leading-relaxed">Department of Artificial Intelligence &amp; Data Science<br>Lakireddy Bali Reddy College of Engineering (Autonomous)<br>Mylavaram, Andhra Pradesh</p>
@@ -554,6 +578,9 @@
                     <li><a href="#schedule" class="hover:text-white transition">Schedule</a></li>
                     <li><a href="#register" class="hover:text-white transition">Register</a></li>
                     <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="lms/exam.html" class="hover:text-white text-indigo-300 font-semibold transition flex items-center gap-1.5"><i class="fa-solid fa-file-pen text-xs"></i> Online Exam Portal</a></li>
+                    <li><a href="admin/attendance.html" class="hover:text-white text-indigo-300 font-semibold transition flex items-center gap-1.5"><i class="fa-solid fa-chart-pie text-xs"></i> Attendance Intelligence</a></li>
+                    <li><a href="admin/exam-analytics.html" class="hover:text-white text-indigo-300 font-semibold transition flex items-center gap-1.5"><i class="fa-solid fa-graduation-cap text-xs"></i> Exam Gradebook</a></li>
                 </ul>
             </div>
             <div>
@@ -595,6 +622,7 @@
         const PORTAL_URL = 'https://atalacademy.aicte-india.org';
         const FDP_TITLE = 'AI-Driven Materials Intelligence and Autonomous Systems';
         const IST = '+05:30';
+        const DEFAULT_TEAMS_URL = 'https://teams.microsoft.com/l/meetup-join/19%3ameeting_atal_fdp_2026_lbrce%40thread.v2/0?context=%7b%22Tid%22%3a%22lbrce-atal-2026%22%7d';
 
         const TOPICS = [
             { icon: 'fa-robot',          color: 'from-violet-500 to-brand-600', title: 'AI & Machine Learning',      text: 'Core ML foundations, model building and evaluation for engineering problems.' },
@@ -628,28 +656,28 @@
 
         // Tentative, indicative schedule. Times in IST.
         const SCHEDULE = [
-            { day: 1, date: '2026-12-14', theme: 'Foundations of AI', sessions: [
+            { day: 1, date: '2026-12-14', theme: 'Foundations of AI', teamsUrl: DEFAULT_TEAMS_URL, sessions: [
                 { start: '18:00', end: '18:30', kind: 'ceremony', title: 'Inaugural Session', speaker: 'LBRCE Leadership & Coordinators' },
                 { start: '18:30', end: '20:00', kind: 'talk', title: 'Keynote: AI from Foundations to Frontiers', speaker: 'Prof. Pradip K Das' },
                 { start: '20:00', end: '21:30', kind: 'lab',  title: 'Hands-on: Building ML Pipelines in Python', speaker: 'Mr. Nahar Singh' },
             ]},
-            { day: 2, date: '2026-12-15', theme: 'Explainable & Trustworthy AI', sessions: [
+            { day: 2, date: '2026-12-15', theme: 'Explainable & Trustworthy AI', teamsUrl: DEFAULT_TEAMS_URL, sessions: [
                 { start: '18:00', end: '19:45', kind: 'talk', title: 'Explainable AI: Methods for Transparent Models', speaker: 'Dr. Ritesh Ratti' },
                 { start: '19:45', end: '21:30', kind: 'talk', title: 'Trustworthy and Secure AI Systems', speaker: 'Dr. Sonia Semwal' },
             ]},
-            { day: 3, date: '2026-12-16', theme: 'Materials Informatics', sessions: [
+            { day: 3, date: '2026-12-16', theme: 'Materials Informatics', teamsUrl: DEFAULT_TEAMS_URL, sessions: [
                 { start: '18:00', end: '19:45', kind: 'talk', title: 'Machine Learning for Advanced Engineering Materials', speaker: 'Dr. T Ram Prabhu' },
                 { start: '19:45', end: '21:30', kind: 'talk', title: 'Data-Driven Design of Functional Materials', speaker: 'Prof. D. Pamu' },
             ]},
-            { day: 4, date: '2026-12-17', theme: 'GNNs & Accelerated Discovery', sessions: [
+            { day: 4, date: '2026-12-17', theme: 'GNNs & Accelerated Discovery', teamsUrl: DEFAULT_TEAMS_URL, sessions: [
                 { start: '18:00', end: '19:45', kind: 'talk', title: 'Graph Neural Networks for Materials Property Prediction', speaker: 'Dr. Tushar Semwal' },
                 { start: '19:45', end: '21:30', kind: 'lab',  title: 'Hands-on: Explainable GNN Models for Materials Discovery', speaker: 'Dr. Tushar Semwal' },
             ]},
-            { day: 5, date: '2026-12-18', theme: 'Autonomous Drone Systems', sessions: [
+            { day: 5, date: '2026-12-18', theme: 'Autonomous Drone Systems', teamsUrl: DEFAULT_TEAMS_URL, sessions: [
                 { start: '18:00', end: '19:45', kind: 'talk', title: 'AI-Enabled UAVs for Surveying and Mapping', speaker: 'Dr. Ajay Dashora' },
                 { start: '19:45', end: '21:30', kind: 'talk', title: 'Vision-Based Navigation, Obstacle Detection & Multi-Agent Coordination', speaker: 'Dr. Shashi Sekhar Jha' },
             ]},
-            { day: 6, date: '2026-12-19', theme: 'Synthesis, Assessment & Valedictory', sessions: [
+            { day: 6, date: '2026-12-19', theme: 'Synthesis, Assessment & Valedictory', teamsUrl: DEFAULT_TEAMS_URL, sessions: [
                 { start: '14:00', end: '15:45', kind: 'talk',     title: 'Integrating XAI, Materials Intelligence & Autonomy: Case Studies', speaker: 'Resource Persons' },
                 { start: '15:45', end: '17:30', kind: 'panel',    title: 'Panel Discussion: Research Directions & Industry Outlook', speaker: 'Expert Panel' },
                 { start: '17:30', end: '18:30', kind: 'test',     title: 'Online Test', speaker: 'All Participants' },
@@ -795,6 +823,9 @@
 
         function renderSchedule() {
             const now = new Date();
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceLive = urlParams.get('live') === 'true' || urlParams.get('preview') === 'live';
+
             $('#day-tabs').innerHTML = SCHEDULE.map(d => `
                 <button type="button" role="tab" id="day-tab-${d.day}" data-day="${d.day}" aria-controls="day-${d.day}-content"
                         class="day-tab shrink-0 px-5 py-2.5 rounded-xl font-bold text-sm transition-all">
@@ -804,6 +835,15 @@
 
             $('#day-panels').innerHTML = SCHEDULE.map(d => {
                 const first = d.sessions[0].start, last = d.sessions[d.sessions.length - 1].end;
+                const dayStart = istDate(d.date, first);
+                const dayEnd = istDate(d.date, last);
+                const activationTime = new Date(dayStart.getTime() - 15 * 60 * 1000); // 15 mins before start
+
+                const isLive = forceLive || (now >= activationTime && now <= dayEnd);
+                const isUpcoming = !forceLive && (now < activationTime);
+                const isCompleted = !forceLive && (now > dayEnd);
+                const openTimeStr = fmt12(d.day === 6 ? '13:45' : '17:45');
+
                 return `
                 <div id="day-${d.day}-content" role="tabpanel" aria-labelledby="day-tab-${d.day}" tabindex="0" class="day-content hidden">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-50 ring-1 ring-slate-200 rounded-2xl p-5">
@@ -816,6 +856,71 @@
                             <i class="fa-regular fa-calendar-plus"></i> Add Day ${d.day}
                         </button>
                     </div>
+
+                    <!-- Microsoft Teams Live Classroom & Attendance Action Card -->
+                    <div class="mt-4 rounded-2xl border transition-all p-5 sm:p-6 ${isLive ? 'bg-gradient-to-br from-indigo-950/5 via-brand-50 to-emerald-50/60 border-emerald-400 ring-2 ring-emerald-400/30 shadow-lg shadow-emerald-500/10' : 'bg-slate-50 border-slate-200'}">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="space-y-1.5">
+                                <div class="flex flex-wrap items-center gap-2.5">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#5059C9] text-white shadow-sm">
+                                        <i class="fa-solid fa-users-rectangle text-sm"></i>
+                                    </span>
+                                    <span class="font-extrabold text-slate-900 text-base">Microsoft Teams Live Classroom</span>
+                                    ${isLive ? `
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-sm shadow-emerald-500/25 animate-pulse">
+                                            <span class="w-2 h-2 rounded-full bg-white animate-ping"></span> Live Now
+                                        </span>
+                                    ` : isCompleted ? `
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200 text-slate-600">
+                                            <i class="fa-solid fa-check"></i> Session Concluded
+                                        </span>
+                                    ` : `
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                            <i class="fa-regular fa-clock"></i> Opens at ${openTimeStr} IST
+                                        </span>
+                                    `}
+                                </div>
+                                <p class="text-xs text-slate-500 flex items-center gap-1.5 pl-0 sm:pl-10">
+                                    <i class="fa-regular fa-calendar-check text-slate-400"></i>
+                                    Scheduled Window: <strong class="text-slate-700">${fmt12(first)} – ${fmt12(last)} IST</strong> (Link activates 15m early)
+                                </p>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                                ${isLive ? `
+                                    <a href="${esc(d.teamsUrl || DEFAULT_TEAMS_URL)}" target="_blank" rel="noopener noreferrer"
+                                       class="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 to-brand-600 hover:from-indigo-500 hover:to-brand-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/40 hover:-translate-y-0.5 transition-all text-center">
+                                        <i class="fa-solid fa-video text-base"></i> Join Live Session (MS Teams)
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80"></i>
+                                    </a>
+                                ` : isCompleted ? `
+                                    <button type="button" disabled
+                                            class="cursor-not-allowed inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-slate-100 text-slate-400 border border-slate-200">
+                                        <i class="fa-solid fa-circle-check"></i> Session Concluded
+                                    </button>
+                                ` : `
+                                    <div class="flex flex-col items-start sm:items-end gap-1">
+                                        <button type="button" disabled
+                                                class="w-full sm:w-auto cursor-not-allowed inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-slate-100 text-slate-400 border border-slate-200 shadow-inner">
+                                            <i class="fa-solid fa-lock text-xs"></i> Join Live Session (MS Teams)
+                                        </button>
+                                        <p class="text-[11px] font-medium text-amber-700 flex items-center gap-1">
+                                            <i class="fa-regular fa-clock text-amber-500"></i> Meeting link activates 15 minutes before session start.
+                                        </p>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+
+                        <!-- Mandatory Attendance Compliance Notice -->
+                        <div class="mt-4 pt-3.5 border-t border-slate-200/80 flex items-start gap-2.5 text-xs text-slate-600 leading-relaxed bg-white/80 rounded-xl p-3 border border-slate-200/60">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 shrink-0 text-sm"></i>
+                            <p>
+                                <strong class="font-bold text-slate-900">Important:</strong> To record your attendance for AICTE ATAL certification (minimum 80% required), please ensure you join using the exact name and email address registered on the ATAL portal.
+                            </p>
+                        </div>
+                    </div>
+
                     <ol class="mt-6 relative border-l-2 border-slate-200 ml-3 space-y-5">
                         ${d.sessions.map(s => {
                             const k = KIND_META[s.kind];
@@ -833,6 +938,13 @@
                                     </div>
                                     <h4 class="mt-2 font-bold text-slate-900 leading-snug">${esc(s.title)}</h4>
                                     <p class="mt-1 text-sm text-slate-500"><i class="fa-regular fa-user mr-1.5"></i>${esc(s.speaker)}</p>
+                                    ${s.kind === 'test' ? `
+                                    <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                                        <span class="text-xs text-slate-500">60-minute proctored exam (Passing: ≥ 60%)</span>
+                                        <a href="lms/exam.html" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white shadow-sm transition">
+                                            <i class="fa-solid fa-file-signature"></i> Open Exam Portal <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                        </a>
+                                    </div>` : ''}
                                 </div>
                             </li>`;
                         }).join('')}

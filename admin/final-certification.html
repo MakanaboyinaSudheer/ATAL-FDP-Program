@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATAL FDP 2026 | Multi-Day Final Certification Master Matrix</title>
+    <meta name="description" content="Consolidated AICTE ATAL certification engine. Combines multi-day attendance (Days 1–6, 80% benchmark) with Day 6 Online Exam scores (60% benchmark) to compute final certificate eligibility.">
+    <link rel="icon" type="image/png" href="../assets/aicte-logo.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.5); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.8); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- ================= NAVIGATION BAR ================= -->
+    <header class="sticky top-0 z-50 border-b border-slate-800/80 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                <div class="flex items-center gap-3">
+                    <a href="../index.html" class="flex items-center gap-2.5 group">
+                        <img src="../assets/aicte-logo.png" alt="AICTE Logo" class="w-9 h-9 rounded-full bg-white p-0.5 shadow-md group-hover:scale-105 transition-transform">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-extrabold text-white text-sm tracking-tight">ATAL FDP 2026</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Final Certification</span>
+                            </div>
+                            <span class="block text-[11px] font-medium text-slate-400">Day 1–6 Master Consolidation</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <a href="attendance.html"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
+                        <i class="fa-solid fa-users text-indigo-400"></i>
+                        <span class="hidden md:inline">Daily Attendance</span>
+                    </a>
+
+                    <a href="exam-analytics.html"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition">
+                        <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
+                        <span class="hidden md:inline">Exam Gradebook</span>
+                    </a>
+
+                    <button type="button" id="load-sample-btn"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-brand-400"></i>
+                        <span class="hidden sm:inline">Load 6-Day Sample Dataset</span>
+                        <span class="sm:hidden">Sample</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Hero Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-3">
+                    <i class="fa-solid fa-scale-balanced"></i> Official AICTE ATAL Dual Qualification Standard
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    Final Certification Master Matrix (Days 1–6)
+                </h1>
+                <p class="mt-2 text-sm text-slate-400 max-w-3xl leading-relaxed">
+                    Combines <strong>Daily Attendance across all 6 days (≥ 80% benchmark)</strong> with the <strong>Day 6 Online Examination score (≥ 60% benchmark)</strong> to determine definitive certificate eligibility for AICTE ATAL portal submission.
+                </p>
+            </div>
+
+            <!-- Export Master Sheet Button -->
+            <div class="flex items-center gap-2.5 shrink-0">
+                <button type="button" id="export-master-csv-btn"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30 transition">
+                    <i class="fa-solid fa-file-excel"></i> Export AICTE Master Sheet (CSV)
+                </button>
+            </div>
+        </div>
+
+        <!-- AICTE ATAL Two-Pillar Requirement Banner -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 grid place-items-center text-lg shrink-0">
+                    <i class="fa-regular fa-calendar-check"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Pillar 1: Multi-Day Attendance (≥ 80%)</h4>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Total program duration: <strong>1,380 minutes (23 hours)</strong> across Days 1–6. A candidate must achieve at least <strong>1,104 minutes (80%)</strong> of cumulative attendance.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 grid place-items-center text-lg shrink-0">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Pillar 2: Online Assessment (≥ 60%)</h4>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Conducted on Day 6 (17:30–18:30 IST). A candidate must score at least <strong>12 out of 20 marks (60%)</strong> on the curriculum test.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= KPI SUMMARY CARDS ================= -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Total Candidates -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Enrolled</span>
+                    <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-total" class="text-3xl font-black text-white font-mono">0</span>
+                    <span class="text-xs text-slate-400">participants</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-400">Across 6 FDP Days</p>
+            </div>
+
+            <!-- Certified / Dual Pass -->
+            <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Final Certified (Dual Pass)</span>
+                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-award"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-certified-count" class="text-3xl font-black text-emerald-400 font-mono">0</span>
+                    <span id="kpi-certified-pct" class="text-sm font-bold text-emerald-300 font-mono">(0%)</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 mt-2.5 overflow-hidden">
+                    <div id="kpi-certified-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Attendance Shortage -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Attendance Shortage (&lt;80%)</span>
+                    <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-user-clock"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-att-shortage" class="text-3xl font-black text-white font-mono">0</span>
+                    <span class="text-xs text-slate-400">candidates</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-400">Passed exam but missed 80%</p>
+            </div>
+
+            <!-- Exam Shortage -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">Exam Failed (&lt;60%)</span>
+                    <span class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 grid place-items-center text-sm">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-exam-failed" class="text-3xl font-black text-white font-mono">0</span>
+                    <span class="text-xs text-slate-400">candidates</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-400">Attended but scored &lt;60%</p>
+            </div>
+        </section>
+
+        <!-- ================= VISUAL CHARTS ================= -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Final Verdict Doughnut -->
+            <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Certification Outcome Ratio</h3>
+                        <p class="text-xs text-slate-400">Pass attendance &ge;80% AND exam &ge;60%</p>
+                    </div>
+                </div>
+                <div class="relative h-64 flex items-center justify-center">
+                    <canvas id="verdict-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Attendance vs Exam Score Scatter/Bar -->
+            <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-white text-base">Dual-Benchmark Correlation</h3>
+                        <p class="text-xs text-slate-400">Categorization across Attendance &amp; Exam thresholds</p>
+                    </div>
+                </div>
+                <div class="relative h-64">
+                    <canvas id="matrix-bar-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CONSOLIDATED MASTER TABLE ================= -->
+        <section class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-bold text-white text-lg">AICTE ATAL Final Certification Master Sheet</h3>
+                    <p class="text-xs text-slate-400">Aggregates Day 1–6 attendance minutes, Day 6 exam score, and the definitive certification verdict</p>
+                </div>
+
+                <!-- Quick Filter Tabs -->
+                <div class="flex items-center gap-1.5 overflow-x-auto" id="filter-tabs">
+                    <button type="button" data-filter="all" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white">
+                        All (<span id="count-all">0</span>)
+                    </button>
+                    <button type="button" data-filter="certified" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        Eligible (<span id="count-certified">0</span>)
+                    </button>
+                    <button type="button" data-filter="not_certified" class="table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">
+                        Not Eligible (<span id="count-not-certified">0</span>)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full sm:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                <input type="text" id="table-search" placeholder="Search candidate name or email…"
+                       class="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+            </div>
+
+            <!-- Master Table -->
+            <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-2xl">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-950/80 text-slate-400 font-semibold border-b border-slate-800 select-none">
+                        <tr>
+                            <th class="py-3 px-3 text-center">#</th>
+                            <th class="py-3 px-3 cursor-pointer hover:text-white" data-sort="name">Candidate Name <i class="fa-solid fa-sort text-[10px]"></i></th>
+                            <th class="py-3 px-3 cursor-pointer hover:text-white" data-sort="email">Email Address <i class="fa-solid fa-sort text-[10px]"></i></th>
+                            <th class="py-3 px-2 text-center text-slate-500">D1 (m)</th>
+                            <th class="py-3 px-2 text-center text-slate-500">D2 (m)</th>
+                            <th class="py-3 px-2 text-center text-slate-500">D3 (m)</th>
+                            <th class="py-3 px-2 text-center text-slate-500">D4 (m)</th>
+                            <th class="py-3 px-2 text-center text-slate-500">D5 (m)</th>
+                            <th class="py-3 px-2 text-center text-slate-500">D6 (m)</th>
+                            <th class="py-3 px-3 cursor-pointer hover:text-white" data-sort="attPct">Total Att. % <i class="fa-solid fa-sort text-[10px]"></i></th>
+                            <th class="py-3 px-3 cursor-pointer hover:text-white" data-sort="examPct">Exam % <i class="fa-solid fa-sort text-[10px]"></i></th>
+                            <th class="py-3 px-4 text-right cursor-pointer hover:text-white" data-sort="verdict">Final Verdict <i class="fa-solid fa-sort text-[10px]"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody id="master-tbody" class="divide-y divide-slate-800/60 font-medium text-slate-300">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="table-empty" class="hidden py-12 text-center text-slate-500 text-xs">
+                No records match. Click <strong>Load 6-Day Sample Dataset</strong> to preview the complete matrix.
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+                <span id="table-showing-text">Showing 0 candidates</span>
+                <span class="text-[11px] text-slate-500">Total Program: 1,380 mins · Benchmark: Att &ge; 80% &amp; Exam &ge; 60%</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950/80 py-6 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>&copy; 2026 Department of AI&amp;DS, Lakireddy Bali Reddy College of Engineering (LBRCE).</p>
+            <p class="flex items-center gap-2">
+                <a href="attendance.html" class="text-brand-400 hover:text-brand-300 transition">Attendance</a>
+                <span>·</span>
+                <a href="exam-analytics.html" class="text-brand-400 hover:text-brand-300 transition">Exam Gradebook</a>
+                <span>·</span>
+                <a href="../index.html" class="text-brand-400 hover:text-brand-300 transition">Main Portal</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-8 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- ================= JAVASCRIPT MASTER CONSOLIDATION LOGIC ================= -->
+    <script>
+    (() => {
+        'use strict';
+
+        const TOTAL_FDP_MINUTES = 1380; // (210 mins * 5 days) + 330 mins (Day 6) = 1380 mins
+        const REQUIRED_ATT_MINUTES = 1104; // 80% of 1380 mins
+
+        let masterRecords = [];
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let sortColumn = 'verdict';
+        let sortDirection = 'desc';
+
+        let verdictChart = null;
+        let matrixBarChart = null;
+
+        const toastEl = document.getElementById('toast');
+        let toastTimer;
+        function showToast(msg, icon = 'fa-circle-check text-emerald-400') {
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').className = `fa-solid ${icon} text-sm`;
+            toastEl.classList.remove('translate-y-8', 'opacity-0', 'pointer-events-none');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toastEl.classList.add('translate-y-8', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        // Calculate Final AICTE Status
+        function evaluateCandidate(r) {
+            const totalAttMins = (r.d1 || 0) + (r.d2 || 0) + (r.d3 || 0) + (r.d4 || 0) + (r.d5 || 0) + (r.d6 || 0);
+            const attPct = Math.min(100, Math.round((totalAttMins / TOTAL_FDP_MINUTES) * 1000) / 10);
+            const isAttPassed = totalAttMins >= REQUIRED_ATT_MINUTES; // >= 80%
+
+            const examScore = r.examScore ?? 0;
+            const examPct = Math.round((examScore / 20) * 100);
+            const isExamPassed = examPct >= 60; // >= 60%
+
+            let verdict = 'NOT_ELIGIBLE';
+            let verdictLabel = 'Not Eligible';
+            let category = 'ineligible';
+
+            if (isAttPassed && isExamPassed) {
+                verdict = 'CERTIFIED';
+                verdictLabel = 'CERTIFIED (Dual Pass)';
+                category = 'certified';
+            } else if (!isAttPassed && isExamPassed) {
+                verdict = 'ATT_SHORTAGE';
+                verdictLabel = 'Attendance Shortage (<80%)';
+                category = 'att_shortage';
+            } else if (isAttPassed && !isExamPassed) {
+                verdict = 'EXAM_FAILED';
+                verdictLabel = 'Exam Failed (<60%)';
+                category = 'exam_failed';
+            }
+
+            return {
+                ...r,
+                totalAttMins,
+                attPct,
+                isAttPassed,
+                examPct,
+                isExamPassed,
+                verdict,
+                verdictLabel,
+                category
+            };
+        }
+
+        // Render Dashboard
+        function renderMasterDashboard() {
+            const evaluated = masterRecords.map(evaluateCandidate);
+            const total = evaluated.length;
+
+            const certified = evaluated.filter(r => r.category === 'certified');
+            const attShortage = evaluated.filter(r => r.category === 'att_shortage');
+            const examFailed = evaluated.filter(r => r.category === 'exam_failed');
+            const doubleFail = evaluated.filter(r => r.category === 'ineligible');
+
+            const certPct = total > 0 ? Math.round((certified.length / total) * 1000) / 10 : 0;
+
+            // KPIs
+            document.getElementById('kpi-total').textContent = total;
+            document.getElementById('kpi-certified-count').textContent = certified.length;
+            document.getElementById('kpi-certified-pct').textContent = `(${certPct}%)`;
+            document.getElementById('kpi-certified-bar').style.width = `${certPct}%`;
+            document.getElementById('kpi-att-shortage').textContent = attShortage.length;
+            document.getElementById('kpi-exam-failed').textContent = examFailed.length;
+
+            // Filter button counts
+            document.getElementById('count-all').textContent = total;
+            document.getElementById('count-certified').textContent = certified.length;
+            document.getElementById('count-not-certified').textContent = total - certified.length;
+
+            renderCharts(certified.length, attShortage.length, examFailed.length, doubleFail.length);
+            renderTable(evaluated);
+        }
+
+        // Render Charts
+        function renderCharts(cCount, asCount, efCount, dfCount) {
+            // Chart 1: Verdict Doughnut
+            const ctxDoughnut = document.getElementById('verdict-chart').getContext('2d');
+            if (verdictChart) verdictChart.destroy();
+
+            verdictChart = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Certified (Dual Pass)', 'Att Shortage (<80%)', 'Exam Failed (<60%)', 'Both Below'],
+                    datasets: [{
+                        data: [cCount, asCount, efCount, dfCount],
+                        backgroundColor: ['#10b981', '#f59e0b', '#818cf8', '#f43f5e'],
+                        borderColor: '#0f172a',
+                        borderWidth: 3,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { family: 'Inter', size: 10, weight: '600' }, padding: 12, boxWidth: 10 }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Chart 2: Dual Benchmark Bar
+            const ctxBar = document.getElementById('matrix-bar-chart').getContext('2d');
+            if (matrixBarChart) matrixBarChart.destroy();
+
+            matrixBarChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Fully Certified', 'Att Shortage', 'Exam Failed', 'Double Shortage'],
+                    datasets: [{
+                        label: 'Candidates',
+                        data: [cCount, asCount, efCount, dfCount],
+                        backgroundColor: ['#10b981', '#f59e0b', '#818cf8', '#f43f5e'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+                        y: { grid: { color: 'rgba(51, 65, 85, 0.4)' }, ticks: { color: '#94a3b8', font: { size: 10 }, stepSize: 1 }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Render Master Table
+        function renderTable(evaluatedList) {
+            const tbody = document.getElementById('master-tbody');
+            const emptyEl = document.getElementById('table-empty');
+            const showingText = document.getElementById('table-showing-text');
+
+            let filtered = evaluatedList.filter(r => {
+                if (currentFilter === 'certified' && r.category !== 'certified') return false;
+                if (currentFilter === 'not_certified' && r.category === 'certified') return false;
+
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    const matchName = (r.name || '').toLowerCase().includes(q);
+                    const matchEmail = (r.email || '').toLowerCase().includes(q);
+                    if (!matchName && !matchEmail) return false;
+                }
+                return true;
+            });
+
+            // Sort
+            filtered.sort((a, b) => {
+                let vA = a[sortColumn];
+                let vB = b[sortColumn];
+                if (sortColumn === 'verdict') { vA = a.category === 'certified' ? 1 : 0; vB = b.category === 'certified' ? 1 : 0; }
+                if (sortColumn === 'attPct') { vA = a.attPct; vB = b.attPct; }
+                if (sortColumn === 'examPct') { vA = a.examPct; vB = b.examPct; }
+
+                if (typeof vA === 'string') {
+                    return sortDirection === 'asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
+                }
+                return sortDirection === 'asc' ? ((vA ?? 0) - (vB ?? 0)) : ((vB ?? 0) - (vA ?? 0));
+            });
+
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyEl.classList.remove('hidden');
+            } else {
+                emptyEl.classList.add('hidden');
+            }
+
+            showingText.textContent = `Showing ${filtered.length} of ${evaluatedList.length} candidates`;
+
+            filtered.forEach((r, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-800/40 transition border-b border-slate-800/40';
+
+                let verdictBadge = '';
+                if (r.category === 'certified') {
+                    verdictBadge = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                        <i class="fa-solid fa-award"></i> CERTIFIED
+                    </span>`;
+                } else if (r.category === 'att_shortage') {
+                    verdictBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30" title="Passed exam (${r.examPct}%), but missed 80% attendance (${r.attPct}%)">
+                        <i class="fa-solid fa-user-clock"></i> ATT SHORTAGE
+                    </span>`;
+                } else if (r.category === 'exam_failed') {
+                    verdictBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30" title="Attended ${r.attPct}%, but scored only ${r.examPct}% on exam">
+                        <i class="fa-solid fa-file-xmark"></i> EXAM &lt; 60%
+                    </span>`;
+                } else {
+                    verdictBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                        <i class="fa-solid fa-xmark"></i> INELIGIBLE
+                    </span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-center text-slate-500 font-mono text-[11px]">${idx + 1}</td>
+                    <td class="py-3 px-3">
+                        <span class="font-bold text-white text-xs block truncate max-w-[160px]">${esc(r.name)}</span>
+                        <span class="text-[10px] text-slate-500 truncate block max-w-[160px]">${esc(r.institution || '')}</span>
+                    </td>
+                    <td class="py-3 px-3">
+                        <span class="text-slate-300 font-mono text-[11px] truncate block max-w-[170px]">${esc(r.email)}</span>
+                    </td>
+                    <td class="py-3 px-2 text-center font-mono text-[11px] ${r.d1 >= 168 ? 'text-emerald-400' : 'text-slate-500'}">${r.d1 || 0}</td>
+                    <td class="py-3 px-2 text-center font-mono text-[11px] ${r.d2 >= 168 ? 'text-emerald-400' : 'text-slate-500'}">${r.d2 || 0}</td>
+                    <td class="py-3 px-2 text-center font-mono text-[11px] ${r.d3 >= 168 ? 'text-emerald-400' : 'text-slate-500'}">${r.d3 || 0}</td>
+                    <td class="py-3 px-2 text-center font-mono text-[11px] ${r.d4 >= 168 ? 'text-emerald-400' : 'text-slate-500'}">${r.d4 || 0}</td>
+                    <td class="py-3 px-2 text-center font-mono text-[11px] ${r.d5 >= 168 ? 'text-emerald-400' : 'text-slate-500'}">${r.d5 || 0}</td>
+                    <td class="py-3 px-2 text-center font-mono text-[11px] ${r.d6 >= 264 ? 'text-emerald-400' : 'text-slate-500'}">${r.d6 || 0}</td>
+                    <td class="py-3 px-3 font-mono">
+                        <span class="font-bold text-xs ${r.isAttPassed ? 'text-emerald-400' : 'text-rose-400'}">${r.attPct}%</span>
+                        <span class="text-[10px] text-slate-500 block">(${r.totalAttMins}m)</span>
+                    </td>
+                    <td class="py-3 px-3 font-mono">
+                        <span class="font-bold text-xs ${r.isExamPassed ? 'text-emerald-400' : 'text-rose-400'}">${r.examPct}%</span>
+                        <span class="text-[10px] text-slate-500 block">(${r.examScore}/20)</span>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        ${verdictBadge}
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Search & Filter
+        document.querySelectorAll('.table-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentFilter = btn.dataset.filter;
+                document.querySelectorAll('.table-filter-btn').forEach(b => {
+                    if (b.dataset.filter === currentFilter) {
+                        b.className = 'table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-brand-600 text-white shadow-sm';
+                    } else {
+                        b.className = 'table-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700';
+                    }
+                });
+                renderMasterDashboard();
+            });
+        });
+
+        document.getElementById('table-search').addEventListener('input', e => {
+            searchQuery = e.target.value.trim();
+            renderMasterDashboard();
+        });
+
+        // Sorting
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.dataset.sort;
+                if (sortColumn === col) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = col;
+                    sortDirection = 'desc';
+                }
+                renderMasterDashboard();
+            });
+        });
+
+        // Export Master CSV
+        document.getElementById('export-master-csv-btn').addEventListener('click', () => {
+            if (masterRecords.length === 0) {
+                showToast('No records to export', 'fa-triangle-exclamation text-amber-400');
+                return;
+            }
+
+            const evaluated = masterRecords.map(evaluateCandidate);
+            const headers = [
+                'Candidate Name',
+                'Email Address',
+                'Institution',
+                'Day 1 Mins (Dec 14)',
+                'Day 2 Mins (Dec 15)',
+                'Day 3 Mins (Dec 16)',
+                'Day 4 Mins (Dec 17)',
+                'Day 5 Mins (Dec 18)',
+                'Day 6 Mins (Dec 19)',
+                'Total Attendance (Mins)',
+                'Cumulative Attendance (%)',
+                'Attendance Status (>=80%)',
+                'Exam Score (out of 20)',
+                'Exam Percentage (%)',
+                'Exam Status (>=60%)',
+                'Final AICTE ATAL Certificate Status'
+            ];
+
+            const rows = evaluated.map(r => [
+                `"${(r.name || '').replace(/"/g, '""')}"`,
+                `"${(r.email || '').replace(/"/g, '""')}"`,
+                `"${(r.institution || '').replace(/"/g, '""')}"`,
+                r.d1 || 0,
+                r.d2 || 0,
+                r.d3 || 0,
+                r.d4 || 0,
+                r.d5 || 0,
+                r.d6 || 0,
+                r.totalAttMins,
+                `${r.attPct}%`,
+                r.isAttPassed ? 'PASS' : 'FAIL',
+                r.examScore,
+                `${r.examPct}%`,
+                r.isExamPassed ? 'PASS' : 'FAIL',
+                `"${r.verdict}"`
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(row => row.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const today = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `AICTE-ATAL-Final-Certification-Matrix-${today}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('AICTE ATAL Master Sheet downloaded!');
+        });
+
+        // Load 6-Day Sample Dataset
+        document.getElementById('load-sample-btn').addEventListener('click', () => {
+            const sample = [
+                { name: 'Dr. Ramesh Kumar', email: 'ramesh.kumar@college.edu.in', institution: 'GMRIT Rajam', d1: 205, d2: 198, d3: 202, d4: 208, d5: 200, d6: 320, examScore: 18 }, // Certified
+                { name: 'Dr. Kavitha Reddy', email: 'kavitha.reddy@jntuk.edu.in', institution: 'JNTU Kakinada', d1: 195, d2: 190, d3: 185, d4: 200, d5: 192, d6: 310, examScore: 17 }, // Certified
+                { name: 'Prof. Suresh Babu K', email: 'sureshbabu@vignan.ac.in', institution: 'Vignan Univ', d1: 200, d2: 195, d3: 200, d4: 190, d5: 195, d6: 315, examScore: 16 }, // Certified
+                { name: 'Dr. Ananya Sen', email: 'ananya.sen@nitrkl.ac.in', institution: 'NIT Rourkela', d1: 210, d2: 205, d3: 210, d4: 205, d5: 208, d6: 325, examScore: 19 }, // Certified
+                { name: 'Ravi Kumar Varma', email: 'ravi.varma@gmrit.edu.in', institution: 'GMRIT Rajam', d1: 180, d2: 175, d3: 185, d4: 190, d5: 180, d6: 290, examScore: 15 }, // Certified
+                { name: 'Deepak Verma', email: 'deepak.v@dtu.ac.in', institution: 'DTU Delhi', d1: 190, d2: 185, d3: 195, d4: 180, d5: 190, d6: 300, examScore: 10 }, // Exam Failed (<60%)
+                { name: 'Pooja Sharma', email: 'pooja.sharma@thapar.edu', institution: 'Thapar Institute', d1: 110, d2: 95, d3: 120, d4: 130, d5: 100, d6: 210, examScore: 16 }, // Att Shortage (<80%)
+                { name: 'Venkatesh Rao M', email: 'mvenkatesh@kluniversity.in', institution: 'KL University', d1: 200, d2: 190, d3: 195, d4: 205, d5: 198, d6: 310, examScore: 16 }, // Certified
+                { name: 'Sneha Patil', email: 'sneha.patil@coep.ac.in', institution: 'COEP Pune', d1: 195, d2: 190, d3: 188, d4: 192, d5: 195, d6: 305, examScore: 13 }, // Certified
+                { name: 'Girish Chandra', email: 'girish.c@bmsce.ac.in', institution: 'BMSCE Bengaluru', d1: 85, d2: 70, d3: 90, d4: 65, d5: 80, d6: 150, examScore: 8 }, // Ineligible (Both Failed)
+                { name: 'Dr. Swathi Narayanan', email: 'swathi.n@amrita.edu', institution: 'Amrita Univ', d1: 205, d2: 200, d3: 208, d4: 200, d5: 205, d6: 320, examScore: 17 }, // Certified
+                { name: 'Harish Naidu', email: 'harish.naidu@gvpce.ac.in', institution: 'GVPCOE', d1: 190, d2: 185, d3: 190, d4: 188, d5: 192, d6: 300, examScore: 15 }, // Certified
+                { name: 'Lakshmi Prasanna', email: 'lprasanna@vrsiddhartha.ac.in', institution: 'VRSEC', d1: 185, d2: 180, d3: 190, d4: 185, d5: 188, d6: 295, examScore: 14 }, // Certified
+                { name: 'Manoj Prabhakar', email: 'manoj.prabhakar@mit.edu', institution: 'MIT Manipal', d1: 195, d2: 190, d3: 185, d4: 192, d5: 190, d6: 298, examScore: 11 }, // Exam Failed (<60%)
+                { name: 'Naveen Kumar G', email: 'gnaveen@svce.edu.in', institution: 'SVCE Tirupati', d1: 198, d2: 192, d3: 195, d4: 200, d5: 195, d6: 310, examScore: 16 } // Certified
+            ];
+
+            masterRecords = sample;
+            renderMasterDashboard();
+            showToast('Loaded 15 sample participants with 6-day attendance & exam scores!');
+        });
+
+    })();
+    </script>
+</body>
+</html>
+
